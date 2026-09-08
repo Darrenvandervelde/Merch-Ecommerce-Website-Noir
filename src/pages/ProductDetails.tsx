@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { getProductBySlug, products } from '../data/products';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
+import { useToastStore } from '../store/toastStore';
 import { formatPrice, getDiscountPercent } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -15,7 +16,6 @@ export function ProductDetails() {
   const [colour, setColour] = useState('');
   const [size, setSize] = useState('');
   const [qty, setQty] = useState(1);
-  const [message, setMessage] = useState('');
 
   const addItem = useCartStore((s) => s.addItem);
   const addToWishlist = useWishlistStore((s) => s.addItem);
@@ -23,6 +23,7 @@ export function ProductDetails() {
   const isInWishlist = useWishlistStore((s) =>
     product ? s.isInWishlist(product.id) : false
   );
+  const addToast = useToastStore((s) => s.addToast);
 
   if (!product) {
     return (
@@ -45,16 +46,22 @@ export function ProductDetails() {
 
   const handleAddToCart = () => {
     const result = addItem(product, colour, size, qty);
-    setMessage(result.message);
-    if (result.success) {
-      setTimeout(() => setMessage(''), 2500);
+    addToast(result.message, result.success ? 'success' : 'error');
+  };
+
+  const handleWishlist = () => {
+    if (isInWishlist) {
+      removeFromWishlist(product.id);
+      addToast('Removed from wishlist', 'info');
+    } else {
+      addToWishlist(product);
+      addToast('Added to wishlist', 'success');
     }
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <div className="grid lg:grid-cols-2 gap-12">
-        {/* Gallery */}
         <div className="space-y-4">
           <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
             <img
@@ -74,7 +81,6 @@ export function ProductDetails() {
           )}
         </div>
 
-        {/* Info */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-brand-950">
             {product.name}
@@ -109,7 +115,6 @@ export function ProductDetails() {
             {product.description}
           </p>
 
-          {/* Colour */}
           <div className="mt-8">
             <p className="text-sm font-medium text-brand-900 mb-3">
               Colour: <span className="font-normal">{colour || 'Select'}</span>
@@ -132,7 +137,6 @@ export function ProductDetails() {
             </div>
           </div>
 
-          {/* Size */}
           <div className="mt-6">
             <p className="text-sm font-medium text-brand-900 mb-3">
               Size: <span className="font-normal">{size || 'Select'}</span>
@@ -155,7 +159,6 @@ export function ProductDetails() {
             </div>
           </div>
 
-          {/* Quantity */}
           <div className="mt-6">
             <p className="text-sm font-medium text-brand-900 mb-3">Quantity</p>
             <div className="inline-flex items-center border border-brand-300 rounded-md">
@@ -180,7 +183,6 @@ export function ProductDetails() {
             <p className="mt-2 text-xs text-brand-500">{product.stock} in stock</p>
           </div>
 
-          {/* Actions */}
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
@@ -190,15 +192,7 @@ export function ProductDetails() {
             >
               Add to Cart
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() =>
-                isInWishlist
-                  ? removeFromWishlist(product.id)
-                  : addToWishlist(product)
-              }
-            >
+            <Button size="lg" variant="outline" onClick={handleWishlist}>
               <Heart
                 className={`h-4 w-4 mr-2 ${isInWishlist ? 'fill-current text-red-500' : ''}`}
               />
@@ -206,17 +200,12 @@ export function ProductDetails() {
             </Button>
           </div>
 
-          {message && (
-            <p
-              className={`mt-4 text-sm ${
-                message.includes('Added') ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {message}
+          {(!colour || !size) && (
+            <p className="mt-3 text-sm text-brand-500">
+              Please select colour and size to add to cart.
             </p>
           )}
 
-          {/* Shipping / Returns */}
           <div className="mt-10 pt-8 border-t border-brand-200 space-y-3 text-sm text-brand-600">
             <p>
               <strong className="text-brand-900">Shipping:</strong> Free on
@@ -230,7 +219,6 @@ export function ProductDetails() {
         </div>
       </div>
 
-      {/* Related */}
       {related.length > 0 && (
         <section className="mt-20">
           <h2 className="text-2xl font-bold tracking-tight mb-8">

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag } from 'lucide-react';
 import type { Product } from '../../types';
-//import { useCartStore } from '../../store/cartStore';
+
 import { useWishlistStore } from '../../store/wishlistStore';
+import { useToastStore } from '../../store/toastStore';
 import { formatPrice, getDiscountPercent } from '../../utils/format';
 import { cn } from '../../utils/cn';
 import { Button } from '../common/Button';
@@ -16,6 +17,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   const addToWishlist = useWishlistStore((s) => s.addItem);
   const removeFromWishlist = useWishlistStore((s) => s.removeItem);
   const isInWishlist = useWishlistStore((s) => s.isInWishlist(product.id));
+  const addToast = useToastStore((s) => s.addToast);
 
   const discount = product.salePrice
     ? getDiscountPercent(product.price, product.salePrice)
@@ -26,8 +28,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
     e.stopPropagation();
     if (isInWishlist) {
       removeFromWishlist(product.id);
+      addToast('Removed from wishlist', 'info');
     } else {
       addToWishlist(product);
+      addToast('Added to wishlist', 'success');
     }
   };
 

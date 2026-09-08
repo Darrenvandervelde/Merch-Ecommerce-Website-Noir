@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 export function Cart() {
+  const addToast = useToastStore((s) => s.addToast);
   const { items, updateQuantity, removeItem, getSubtotal, clearCart } =
     useCartStore();
 
@@ -102,9 +104,10 @@ export function Cart() {
 
                   <button
                     type="button"
-                    onClick={() =>
-                      removeItem(item.productId, item.colour, item.size)
-                    }
+                    onClick={() => {
+                      removeItem(item.productId, item.colour, item.size);
+                      addToast('Item removed from cart', 'info');
+                    }}
                     className="text-brand-400 hover:text-red-600 transition-colors"
                     aria-label="Remove item"
                   >
