@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Product, Order, CartItem, ShippingAddress } from '../types';
+import type { Product, CartItem, ShippingAddress } from '../types';
 import { products as initialProducts } from '../data/products';
 
 export type OrderStatus =
