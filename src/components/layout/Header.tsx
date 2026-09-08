@@ -16,8 +16,10 @@ const navLinks = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const cartCount = useCartStore((s) => s.getItemCount());
-  const wishlistCount = useWishlistStore((s) => s.getCount());
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
+  const wishlistCount = useWishlistStore((s) => s.items.length);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-200">

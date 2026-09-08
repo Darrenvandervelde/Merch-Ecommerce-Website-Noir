@@ -5,7 +5,8 @@ import { Button } from '../components/common/Button';
 import { Heart } from 'lucide-react';
 
 export function Wishlist() {
-  const { items, removeItem } = useWishlistStore();
+  const items = useWishlistStore((s) => s.items);
+  const removeItem = useWishlistStore((s) => s.removeItem);
 
   if (items.length === 0) {
     return (

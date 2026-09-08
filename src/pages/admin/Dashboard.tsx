@@ -1,21 +1,42 @@
 import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useAdminStore } from '../../store/adminStore';
 import { formatPrice } from '../../utils/format';
 import { Package, ShoppingCart, DollarSign, AlertTriangle } from 'lucide-react';
 
 export function AdminDashboard() {
-  const stats = useAdminStore((s) => s.getStats());
   const orders = useAdminStore((s) => s.orders);
   const products = useAdminStore((s) => s.products);
 
-  const recentOrders = [...orders]
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )
-    .slice(0, 5);
+  // Compute stats in useMemo — never return a new object from a Zustand selector
+  const stats = useMemo(() => {
+    const paidOrders = orders.filter((o) => o.paymentStatus === 'paid');
+    return {
+      totalProducts: products.length,
+      totalOrders: orders.length,
+      revenue: paidOrders.reduce((sum, o) => sum + o.total, 0),
+      pendingOrders: orders.filter(
+        (o) => o.status === 'pending' || o.status === 'processing'
+      ).length,
+      lowStock: products.filter((p) => p.stock < 40).length,
+    };
+  }, [orders, products]);
 
-  const lowStockProducts = products.filter((p) => p.stock < 40).slice(0, 5);
+  const recentOrders = useMemo(
+    () =>
+      [...orders]
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .slice(0, 5),
+    [orders]
+  );
+
+  const lowStockProducts = useMemo(
+    () => products.filter((p) => p.stock < 40).slice(0, 5),
+    [products]
+  );
 
   const cards = [
     {
@@ -71,7 +92,6 @@ export function AdminDashboard() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent orders */}
         <div className="bg-white rounded-lg border border-brand-200 shadow-sm">
           <div className="flex items-center justify-between px-5 py-4 border-b border-brand-100">
             <h2 className="font-semibold text-brand-950">Recent orders</h2>
@@ -103,7 +123,6 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Low stock */}
         <div className="bg-white rounded-lg border border-brand-200 shadow-sm">
           <div className="flex items-center justify-between px-5 py-4 border-b border-brand-100">
             <h2 className="font-semibold text-brand-950">Low stock</h2>

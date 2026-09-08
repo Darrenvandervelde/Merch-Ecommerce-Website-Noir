@@ -24,8 +24,14 @@ type FormData = z.infer<typeof schema>;
 
 export function Checkout() {
   const navigate = useNavigate();
-  const { items, getSubtotal, clearCart } = useCartStore();
-  const subtotal = getSubtotal();
+  const items = useCartStore((s) => s.items);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const subtotal = useCartStore((s) =>
+    s.items.reduce((sum, item) => {
+      const unit = item.salePrice ?? item.price;
+      return sum + unit * item.quantity;
+    }, 0)
+  );
   const shipping = subtotal >= 100 ? 0 : 8;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;

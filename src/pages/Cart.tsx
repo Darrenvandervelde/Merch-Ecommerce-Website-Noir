@@ -7,10 +7,16 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 
 export function Cart() {
   const addToast = useToastStore((s) => s.addToast);
-  const { items, updateQuantity, removeItem, getSubtotal, clearCart } =
-    useCartStore();
-
-  const subtotal = getSubtotal();
+  const items = useCartStore((s) => s.items);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const subtotal = useCartStore((s) =>
+    s.items.reduce((sum, item) => {
+      const unit = item.salePrice ?? item.price;
+      return sum + unit * item.quantity;
+    }, 0)
+  );
   const shipping = subtotal >= 100 ? 0 : 8;
   const tax = subtotal * 0.08; // demo tax
   const total = subtotal + shipping + tax;
