@@ -1,4 +1,4 @@
-# NOIR – Premium Streetwear E-Commerce
+# NOIR Premium Streetwear E-Commerce
 
 Production-ready merchandise store for hoodies and T-shirts built with React, Vite, TypeScript, Tailwind CSS, Zustand, React Hook Form + Zod, and React Router.
 
