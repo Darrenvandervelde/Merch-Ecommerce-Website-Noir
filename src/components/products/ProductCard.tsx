@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag } from 'lucide-react';
 import type { Product } from '../../types';
-import { useCartStore } from '../../store/cartStore';
+//import { useCartStore } from '../../store/cartStore';
 import { useWishlistStore } from '../../store/wishlistStore';
 import { formatPrice, getDiscountPercent } from '../../utils/format';
 import { cn } from '../../utils/cn';
