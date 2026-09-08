@@ -1,15 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { products } from '../data/products';
+import { useAdminStore } from '../store/adminStore';
 import { ProductGrid } from '../components/products/ProductGrid';
 import type { ProductCategory, SortOption } from '../types';
 
 const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
-const ALL_COLOURS = Array.from(
-  new Set(products.flatMap((p) => p.colours))
-).sort();
 
 export function Shop() {
+  const products = useAdminStore((s) => s.products);
   const [searchParams, setSearchParams] = useSearchParams();
   const [sort, setSort] = useState<SortOption>(
     (searchParams.get('sort') as SortOption) || 'featured'
@@ -22,6 +20,10 @@ export function Shop() {
 
   const category =
     (searchParams.get('category') as ProductCategory | 'all') || 'all';
+
+  const ALL_COLOURS = Array.from(
+    new Set(products.flatMap((p) => p.colours))
+  ).sort();
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -94,6 +96,7 @@ export function Shop() {
 
     return list;
   }, [
+    products,
     category,
     search,
     sort,

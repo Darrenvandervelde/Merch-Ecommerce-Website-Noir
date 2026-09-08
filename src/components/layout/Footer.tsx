@@ -18,6 +18,7 @@ const footerLinks = {
     { to: '/about', label: 'About NOIR' },
     { to: '/privacy', label: 'Privacy Policy' },
     { to: '/terms', label: 'Terms & Conditions' },
+    { to: '/admin', label: 'Admin' },
   ],
 };
 

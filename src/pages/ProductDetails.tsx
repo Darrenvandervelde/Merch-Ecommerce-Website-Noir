@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
-import { getProductBySlug, products } from '../data/products';
+import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
@@ -11,7 +11,8 @@ import { Heart, Minus, Plus } from 'lucide-react';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
-  const product = getProductBySlug(slug || '');
+  const products = useAdminStore((s) => s.products);
+  const product = products.find((p) => p.slug === slug);
 
   const [colour, setColour] = useState('');
   const [size, setSize] = useState('');

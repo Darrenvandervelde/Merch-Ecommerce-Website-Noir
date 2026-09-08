@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
+import { AdminLayout } from '../layouts/AdminLayout';
 
 const Home = lazy(() => import('../pages/Home').then((m) => ({ default: m.Home })));
 const Shop = lazy(() => import('../pages/Shop').then((m) => ({ default: m.Shop })));
@@ -17,6 +18,11 @@ const ShippingReturns = lazy(() => import('../pages/ShippingReturns').then((m) =
 const Privacy = lazy(() => import('../pages/Privacy').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
 const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
+
+const AdminDashboard = lazy(() => import('../pages/admin/Dashboard').then((m) => ({ default: m.AdminDashboard })));
+const AdminProducts = lazy(() => import('../pages/admin/Products').then((m) => ({ default: m.AdminProducts })));
+const AdminOrders = lazy(() => import('../pages/admin/Orders').then((m) => ({ default: m.AdminOrders })));
+const AdminPayments = lazy(() => import('../pages/admin/Payments').then((m) => ({ default: m.AdminPayments })));
 
 function PageLoader() {
   return (
@@ -50,6 +56,16 @@ export const router = createBrowserRouter([
       { path: 'privacy', element: withSuspense(<Privacy />) },
       { path: 'terms', element: withSuspense(<Terms />) },
       { path: '*', element: withSuspense(<NotFound />) },
+    ],
+  },
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: withSuspense(<AdminDashboard />) },
+      { path: 'products', element: withSuspense(<AdminProducts />) },
+      { path: 'orders', element: withSuspense(<AdminOrders />) },
+      { path: 'payments', element: withSuspense(<AdminPayments />) },
     ],
   },
 ]);

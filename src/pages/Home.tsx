@@ -1,17 +1,14 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import {
-  getFeaturedProducts,
-  getBestsellers,
-  getNewArrivals,
-} from '../data/products';
+import { useAdminStore } from '../store/adminStore';
 import { ProductGrid } from '../components/products/ProductGrid';
 import { Button } from '../components/common/Button';
 
 export function Home() {
-  const featured = getFeaturedProducts().slice(0, 4);
-  const bestsellers = getBestsellers().slice(0, 4);
-  const newArrivals = getNewArrivals().slice(0, 4);
+  const products = useAdminStore((s) => s.products);
+  const featured = products.filter((p) => p.featured).slice(0, 4);
+  const bestsellers = products.filter((p) => p.bestseller).slice(0, 4);
+  const newArrivals = products.filter((p) => p.newArrival).slice(0, 4);
 
   return (
     <div>
