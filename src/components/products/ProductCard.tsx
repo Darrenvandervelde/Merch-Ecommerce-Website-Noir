@@ -65,6 +65,11 @@ export function ProductCard({ product, className }: ProductCardProps) {
               Bestseller
             </span>
           )}
+          {product.category === 'print3d' && (
+            <span className="bg-emerald-500 text-brand-950 text-[10px] font-semibold uppercase tracking-wider px-2 py-1">
+              3D Lab
+            </span>
+          )}
           {discount > 0 && (
             <span className="bg-red-600 text-white text-[10px] font-semibold uppercase tracking-wider px-2 py-1">
               -{discount}%

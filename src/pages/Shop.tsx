@@ -9,7 +9,7 @@ const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export function Shop() {
   const products = useAdminStore((s) => s.products);
-  useDocumentTitle('Shop', 'Shop premium hoodies and T-shirts from NOIR.');
+  useDocumentTitle('Shop', 'Shop premium streetwear and 3D printed objects from NOIR.');
   const [searchParams, setSearchParams] = useSearchParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sort, setSort] = useState<SortOption>(
@@ -180,6 +180,7 @@ export function Shop() {
                 { value: 'all', label: 'All' },
                 { value: 'tshirt', label: 'T-Shirts' },
                 { value: 'hoodie', label: 'Hoodies' },
+                { value: 'print3d', label: '3D Lab' },
               ].map((opt) => (
                 <button
                   key={opt.value}

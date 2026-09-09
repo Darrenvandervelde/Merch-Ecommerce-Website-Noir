@@ -46,6 +46,9 @@ export function ProductDetails() {
     );
   }
 
+  const isPrint = product.category === 'print3d';
+  const colourLabel = isPrint ? 'Finish / colour' : 'Colour';
+  const sizeLabel = isPrint ? 'Size / scale' : 'Size';
   const discount = product.salePrice
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
@@ -142,7 +145,7 @@ export function ProductDetails() {
 
           <div className="mt-8">
             <p className="text-sm font-medium text-brand-900 mb-3">
-              Colour: <span className="font-normal">{colour || 'Select'}</span>
+              {colourLabel}: <span className="font-normal">{colour || 'Select'}</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {product.colours.map((c) => (
@@ -164,7 +167,7 @@ export function ProductDetails() {
 
           <div className="mt-6">
             <p className="text-sm font-medium text-brand-900 mb-3">
-              Size: <span className="font-normal">{size || 'Select'}</span>
+              {sizeLabel}: <span className="font-normal">{size || 'Select'}</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {product.sizes.map((s) => (

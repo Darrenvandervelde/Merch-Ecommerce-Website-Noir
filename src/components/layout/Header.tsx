@@ -11,6 +11,7 @@ const navLinks = [
   { to: '/shop', label: 'Shop' },
   { to: '/shop?category=tshirt', label: 'T-Shirts' },
   { to: '/shop?category=hoodie', label: 'Hoodies' },
+  { to: '/shop?category=print3d', label: '3D Lab' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
 ];
@@ -153,7 +154,7 @@ export function Header() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search hoodies, tees…"
+                placeholder="Search merch & 3D prints…"
                 className="w-full h-11 pl-10 pr-4 border border-brand-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
                 aria-label="Search products"
               />

@@ -3,7 +3,7 @@
     {
       "id": "usr-admin001",
       "email": "admin@noir.store",
-      "passwordHash": "$2b$10$77FZWD1xDy0uBog8YcIJp...",
+      "passwordHash": "$2b$10$77FZWD1xDy0uBog8YcIJp.Sdurm2cLS7UaXegny18yho4RGCAMAHq",
       "firstName": "Admin",
       "lastName": "NOIR",
       "role": "admin",

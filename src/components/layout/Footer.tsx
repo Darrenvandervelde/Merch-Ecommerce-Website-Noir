@@ -6,6 +6,7 @@ const footerLinks = {
     { to: '/shop', label: 'All Products' },
     { to: '/shop?category=tshirt', label: 'T-Shirts' },
     { to: '/shop?category=hoodie', label: 'Hoodies' },
+    { to: '/shop?category=print3d', label: '3D Lab' },
     { to: '/shop?sort=newest', label: 'New Arrivals' },
   ],
   Help: [

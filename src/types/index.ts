@@ -1,4 +1,4 @@
-export type ProductCategory = 'tshirt' | 'hoodie';
+export type ProductCategory = 'tshirt' | 'hoodie' | 'print3d';
 
 export interface Product {
   id: string;

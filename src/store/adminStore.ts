@@ -282,7 +282,7 @@ export const useAdminStore = create<AdminState>()(
       },
     }),
     {
-      name: 'noir-admin-v1',
+      name: 'noir-admin-v2',
       partialize: (state) => ({
         products: state.products,
         orders: state.orders,
