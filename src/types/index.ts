@@ -121,13 +121,14 @@ export interface Order {
 }
 
 export type SortOption =
-  | 'featured'
   | 'newest'
   | 'price-asc'
   | 'price-desc'
   | 'best-selling'
-  | 'highest-rated';
-
+  | 'highest-rated'
+  | 'discount'
+  | 'featured';
+  
 export interface ProductFilters {
   category?: ProductCategory | 'all';
   sizes?: string[];
