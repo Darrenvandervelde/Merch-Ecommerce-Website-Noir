@@ -1,5 +1,15 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "usr-admin001",
+      "email": "admin@noir.store",
+      "passwordHash": "$2b$10$77FZWD1xDy0uBog8YcIJp...",
+      "firstName": "Admin",
+      "lastName": "NOIR",
+      "role": "admin",
+      "createdAt": "2026-09-09T08:00:00.000Z"
+    }
+  ],
   "products": [],
   "orders": []
 }
