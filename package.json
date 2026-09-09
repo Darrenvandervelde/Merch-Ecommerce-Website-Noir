@@ -28,7 +28,8 @@
     "react-router-dom": "^6.28.0",
     "tailwind-merge": "^2.6.0",
     "zod": "^3.24.1",
-    "zustand": "^5.0.2"
+    "zustand": "^5.0.2", 
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
@@ -44,6 +45,7 @@
     "tailwindcss": "^4.0.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.2",
+    "@types/three": "^0.170.0"
   }
 }
