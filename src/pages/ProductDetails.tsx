@@ -13,9 +13,9 @@ import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
 import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
-import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
-import { BundleUpsell } from '../components/products/BundleUpsell';
-import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
+//import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
+//import { BundleUpsell } from '../components/products/BundleUpsell';
+//import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 
 export function ProductDetails() {
