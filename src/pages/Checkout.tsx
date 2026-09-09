@@ -3,6 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useToastStore } from '../store/toastStore';
+import { createOrder } from '../api/orders';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
 
@@ -23,7 +26,9 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function Checkout() {
+  useDocumentTitle('Checkout');
   const navigate = useNavigate();
+  const addToast = useToastStore((s) => s.addToast);
   const items = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clearCart);
   const subtotal = useCartStore((s) =>
@@ -57,25 +62,98 @@ export function Checkout() {
   }
 
   const onSubmit = async (data: FormData) => {
-    // In production: send to backend + Stripe
-    // Never store raw card data here
-    const orderId = `ORD-${Date.now().toString(36).toUpperCase()}`;
-    // Simulate success
-    clearCart();
-    navigate(`/order-confirmation/${orderId}`, {
-      state: { ...data, total, items },
-    });
+    try {
+      const order = await createOrder({
+        email: data.email,
+        items: items.map((item) => ({
+          productId: item.productId,
+          colour: item.colour,
+          size: item.size,
+          quantity: item.quantity,
+        })),
+        shippingAddress: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address1: data.address1,
+          address2: data.address2,
+          city: data.city,
+          state: data.state,
+          postalCode: data.postalCode,
+          country: data.country,
+          phone: data.phone,
+        },
+        deliveryMethod: data.delivery,
+      });
+      clearCart();
+      addToast('Order placed successfully', 'success');
+      navigate(`/order-confirmation/${order.orderNumber || order.id}`, {
+        state: { ...data, total: order.total, items: order.items, email: data.email },
+      });
+    } catch (err) {
+      addToast(err instanceof Error ? err.message : 'Checkout failed', 'error');
+    }
+  };
+
+  const handleExpressPay = (provider: string) => {
+    addToast(
+      `${provider} will connect via Stripe when VITE_STRIPE_PUBLIC_KEY is set.`,
+      'info'
+    );
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl font-bold tracking-tight mb-10">Checkout</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-2">Checkout</h1>
+      <p className="text-sm text-brand-500 mb-8">
+        Guest checkout — no account required. You can create one after your order.
+      </p>
+
+      {/* Express pay */}
+      <div className="mb-10 max-w-xl">
+        <p className="text-xs font-medium uppercase tracking-wider text-brand-500 mb-3">
+          Express checkout
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button
+            type="button"
+            onClick={() => handleExpressPay('Apple Pay')}
+            className="h-12 rounded-md bg-black text-white text-sm font-medium hover:bg-brand-800 transition-colors"
+          >
+            Apple Pay
+          </button>
+          <button
+            type="button"
+            onClick={() => handleExpressPay('Google Pay')}
+            className="h-12 rounded-md border border-brand-300 bg-white text-sm font-medium hover:bg-brand-50 transition-colors"
+          >
+            Google Pay
+          </button>
+          <button
+            type="button"
+            onClick={() => handleExpressPay('Shop Pay')}
+            className="h-12 rounded-md bg-[#5a31f4] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            Shop Pay
+          </button>
+        </div>
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-brand-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-3 text-brand-400">Or continue below</span>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-10">
           {/* Contact */}
           <section>
-            <h2 className="text-lg font-semibold mb-4">Contact information</h2>
+            <h2 className="text-lg font-semibold mb-1">Contact information</h2>
+            <p className="text-xs text-brand-500 mb-4">
+              We will use this email for order updates only.
+            </p>
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input

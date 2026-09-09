@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAdminStore } from '../store/adminStore';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { ProductGrid } from '../components/products/ProductGrid';
 import { Button } from '../components/common/Button';
 
 export function Home() {
+  useDocumentTitle('Home', 'Premium streetwear hoodies and T-shirts by NOIR.');
   const products = useAdminStore((s) => s.products);
   const featured = products.filter((p) => p.featured).slice(0, 4);
   const bestsellers = products.filter((p) => p.bestseller).slice(0, 4);

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Search, User, Heart, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCartStore } from '../../store/cartStore';
+import { useAuthStore } from '../../store/authStore';
 import { useWishlistStore } from '../../store/wishlistStore';
 import { cn } from '../../utils/cn';
 
@@ -15,17 +16,49 @@ const navLinks = [
 ];
 
 export function Header() {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const cartCount = useCartStore((s) =>
     s.items.reduce((sum, item) => sum + item.quantity, 0)
   );
   const wishlistCount = useWishlistStore((s) => s.items.length);
+  const user = useAuthStore((s) => s.user);
+
+  useEffect(() => {
+    if (searchOpen) {
+      searchInputRef.current?.focus();
+    }
+  }, [searchOpen]);
+
+  // Close search on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSearchOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const submitSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const q = query.trim();
+    setSearchOpen(false);
+    setQuery('');
+    if (q) {
+      navigate(`/shop?q=${encodeURIComponent(q)}`);
+    } else {
+      navigate('/shop');
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-20">
-          {/* Mobile menu button */}
           <button
             type="button"
             className="lg:hidden p-2 -ml-2 text-brand-900"
@@ -35,7 +68,6 @@ export function Header() {
             <Menu className="h-6 w-6" />
           </button>
 
-          {/* Logo */}
           <Link
             to="/"
             className="text-2xl font-extrabold tracking-tighter text-brand-950"
@@ -43,7 +75,6 @@ export function Header() {
             NOIR
           </Link>
 
-          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8" aria-label="Main">
             {navLinks.map((link) => (
               <NavLink
@@ -61,20 +92,20 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right icons */}
           <div className="flex items-center gap-1 sm:gap-3">
-            <Link
-              to="/shop"
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
               className="p-2 text-brand-700 hover:text-brand-950 transition-colors"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
-            </Link>
+            </button>
 
             <Link
-              to="/account"
+              to={user ? '/account' : '/login'}
               className="hidden sm:block p-2 text-brand-700 hover:text-brand-950 transition-colors"
-              aria-label="Account"
+              aria-label={user ? 'Account' : 'Log in'}
             >
               <User className="h-5 w-5" />
             </Link>
@@ -108,17 +139,51 @@ export function Header() {
         </div>
       </div>
 
+      {/* Search overlay */}
+      {searchOpen && (
+        <div className="absolute inset-x-0 top-full border-b border-brand-200 bg-white shadow-lg">
+          <form
+            onSubmit={submitSearch}
+            className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex gap-3"
+          >
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-400" />
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search hoodies, tees…"
+                className="w-full h-11 pl-10 pr-4 border border-brand-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
+                aria-label="Search products"
+              />
+            </div>
+            <button
+              type="submit"
+              className="h-11 px-5 bg-brand-900 text-white text-sm font-medium rounded-md hover:bg-brand-800"
+            >
+              Search
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(false)}
+              className="h-11 px-3 text-brand-600 hover:text-brand-900"
+              aria-label="Close search"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
-
-          {/* Panel */}
           <div className="absolute inset-y-0 left-0 w-full max-w-xs bg-white shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 h-16 border-b border-brand-200">
               <span className="text-xl font-extrabold tracking-tighter">NOIR</span>
@@ -168,6 +233,13 @@ export function Header() {
               >
                 <Heart className="h-5 w-5" />
                 Wishlist ({wishlistCount})
+              </Link>
+              <Link
+                to="/admin"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 text-brand-500 text-sm"
+              >
+                Admin
               </Link>
             </div>
           </div>

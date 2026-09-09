@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useSearchParams } from 'react-router-dom';
 import { useAdminStore } from '../store/adminStore';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -8,7 +9,9 @@ const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export function Shop() {
   const products = useAdminStore((s) => s.products);
+  useDocumentTitle('Shop', 'Shop premium hoodies and T-shirts from NOIR.');
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [sort, setSort] = useState<SortOption>(
     (searchParams.get('sort') as SortOption) || 'featured'
   );
@@ -17,6 +20,10 @@ export function Shop() {
   const [priceMax, setPriceMax] = useState(150);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [search, setSearch] = useState(searchParams.get('q') || '');
+
+  useEffect(() => {
+    setSearch(searchParams.get('q') || '');
+  }, [searchParams]);
 
   const category =
     (searchParams.get('category') as ProductCategory | 'all') || 'all';
@@ -138,8 +145,8 @@ export function Shop() {
         </p>
       </div>
 
-      {/* Search */}
-      <div className="mb-8">
+      {/* Search + mobile filters toggle */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-3 sm:items-center">
         <input
           type="search"
           placeholder="Search products…"
@@ -148,11 +155,22 @@ export function Shop() {
           className="w-full max-w-md h-11 px-4 border border-brand-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
           aria-label="Search products"
         />
+        <button
+          type="button"
+          className="lg:hidden h-11 px-4 border border-brand-300 rounded-md text-sm font-medium"
+          onClick={() => setFiltersOpen((o) => !o)}
+        >
+          {filtersOpen ? 'Hide filters' : 'Show filters'}
+        </button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Sidebar */}
-        <aside className="lg:w-56 shrink-0 space-y-8">
+        <aside
+          className={`lg:w-56 shrink-0 space-y-8 ${
+            filtersOpen ? 'block' : 'hidden lg:block'
+          }`}
+        >
           <div>
             <h3 className="text-sm font-semibold text-brand-900 mb-3">
               Category

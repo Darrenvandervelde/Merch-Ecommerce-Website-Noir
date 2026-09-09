@@ -1,16 +1,20 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Heart, Minus, Plus } from 'lucide-react';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
 import { formatPrice, getDiscountPercent } from '../utils/format';
 import { Button } from '../components/common/Button';
-import { ProductGrid } from '../components/products/ProductGrid';
-import { Heart, Minus, Plus } from 'lucide-react';
+import { SizeGuidePanel } from '../components/products/SizeGuide';
+import { RestockAlert } from '../components/products/RestockAlert';
+import { ShopTheLook } from '../components/products/ShopTheLook';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const products = useAdminStore((s) => s.products);
   const product = products.find((p) => p.slug === slug);
 
@@ -25,6 +29,11 @@ export function ProductDetails() {
     product ? s.isInWishlist(product.id) : false
   );
   const addToast = useToastStore((s) => s.addToast);
+
+  useDocumentTitle(
+    product?.name ?? 'Product',
+    product?.description?.slice(0, 155)
+  );
 
   if (!product) {
     return (
@@ -41,9 +50,7 @@ export function ProductDetails() {
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
 
-  const related = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+  const variantInStock = product.stock > 0;
 
   const handleAddToCart = () => {
     const result = addItem(product, colour, size, qty);
@@ -57,6 +64,16 @@ export function ProductDetails() {
     } else {
       addToWishlist(product);
       addToast('Added to wishlist', 'success');
+    }
+  };
+
+  const handleBuyNow = () => {
+    const result = addItem(product, colour, size, qty);
+    if (result.success) {
+      addToast(result.message, 'success');
+      navigate('/checkout');
+    } else {
+      addToast(result.message, 'error');
     }
   };
 
@@ -74,8 +91,15 @@ export function ProductDetails() {
           {product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-3">
               {product.images.map((img, i) => (
-                <div key={i} className="aspect-square bg-brand-100 overflow-hidden">
-                  <img src={img} alt="" className="h-full w-full object-cover" />
+                <div
+                  key={i}
+                  className="aspect-square bg-brand-100 overflow-hidden"
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               ))}
             </div>
@@ -160,6 +184,12 @@ export function ProductDetails() {
             </div>
           </div>
 
+          <SizeGuidePanel
+            category={product.category}
+            productId={product.id}
+            
+          />
+
           <div className="mt-6">
             <p className="text-sm font-medium text-brand-900 mb-3">Quantity</p>
             <div className="inline-flex items-center border border-brand-300 rounded-md">
@@ -177,31 +207,53 @@ export function ProductDetails() {
                 onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
                 className="p-3 hover:bg-brand-50"
                 aria-label="Increase quantity"
+                disabled={product.stock < 1}
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-2 text-xs text-brand-500">{product.stock} in stock</p>
+            <p className="mt-2 text-xs text-brand-500">
+              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            </p>
           </div>
+
+          <RestockAlert
+            productId={product.id}
+            
+            colour={colour}
+            size={size}
+            inStock={variantInStock}
+          />
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
               fullWidth
               onClick={handleAddToCart}
-              disabled={!colour || !size}
+              disabled={!colour || !size || !variantInStock}
             >
               Add to Cart
             </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              fullWidth
+              onClick={handleBuyNow}
+              disabled={!colour || !size || !variantInStock}
+            >
+              Buy now
+            </Button>
             <Button size="lg" variant="outline" onClick={handleWishlist}>
               <Heart
-                className={`h-4 w-4 mr-2 ${isInWishlist ? 'fill-current text-red-500' : ''}`}
+                className={`h-4 w-4 mr-2 ${
+                  isInWishlist ? 'fill-current text-red-500' : ''
+                }`}
               />
               {isInWishlist ? 'In Wishlist' : 'Wishlist'}
             </Button>
           </div>
 
-          {(!colour || !size) && (
+          {(!colour || !size) && variantInStock && (
             <p className="mt-3 text-sm text-brand-500">
               Please select colour and size to add to cart.
             </p>
@@ -216,18 +268,15 @@ export function ProductDetails() {
               <strong className="text-brand-900">Returns:</strong> 30-day easy
               returns. Free return shipping.
             </p>
+            <p>
+              <strong className="text-brand-900">Care:</strong> Machine wash
+              cold, inside out. Hang dry or tumble low. Avoid bleach.
+            </p>
           </div>
         </div>
       </div>
 
-      {related.length > 0 && (
-        <section className="mt-20">
-          <h2 className="text-2xl font-bold tracking-tight mb-8">
-            You may also like
-          </h2>
-          <ProductGrid products={related} />
-        </section>
-      )}
+      <ShopTheLook current={product} products={products} />
     </div>
   );
 }

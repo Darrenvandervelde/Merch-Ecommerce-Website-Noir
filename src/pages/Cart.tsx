@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 export function Cart() {
+  useDocumentTitle('Cart');
   const addToast = useToastStore((s) => s.addToast);
   const items = useCartStore((s) => s.items);
   const updateQuantity = useCartStore((s) => s.updateQuantity);

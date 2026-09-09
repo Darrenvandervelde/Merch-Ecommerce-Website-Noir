@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
+import { ProtectedRoute } from '../components/common/ProtectedRoute';
 
 const Home = lazy(() => import('../pages/Home').then((m) => ({ default: m.Home })));
 const Shop = lazy(() => import('../pages/Shop').then((m) => ({ default: m.Shop })));
@@ -14,6 +15,8 @@ const Contact = lazy(() => import('../pages/Contact').then((m) => ({ default: m.
 const FAQ = lazy(() => import('../pages/FAQ').then((m) => ({ default: m.FAQ })));
 const Wishlist = lazy(() => import('../pages/Wishlist').then((m) => ({ default: m.Wishlist })));
 const Account = lazy(() => import('../pages/Account').then((m) => ({ default: m.Account })));
+const Login = lazy(() => import('../pages/Login').then((m) => ({ default: m.Login })));
+const Register = lazy(() => import('../pages/Register').then((m) => ({ default: m.Register })));
 const ShippingReturns = lazy(() => import('../pages/ShippingReturns').then((m) => ({ default: m.ShippingReturns })));
 const Privacy = lazy(() => import('../pages/Privacy').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
@@ -36,6 +39,12 @@ function withSuspense(element: React.ReactNode) {
   return <Suspense fallback={<PageLoader />}>{element}</Suspense>;
 }
 
+function withAdmin(element: React.ReactNode) {
+  return withSuspense(
+    <ProtectedRoute adminOnly>{element}</ProtectedRoute>
+  );
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -52,6 +61,8 @@ export const router = createBrowserRouter([
       { path: 'faq', element: withSuspense(<FAQ />) },
       { path: 'wishlist', element: withSuspense(<Wishlist />) },
       { path: 'account', element: withSuspense(<Account />) },
+      { path: 'login', element: withSuspense(<Login />) },
+      { path: 'register', element: withSuspense(<Register />) },
       { path: 'shipping-returns', element: withSuspense(<ShippingReturns />) },
       { path: 'privacy', element: withSuspense(<Privacy />) },
       { path: 'terms', element: withSuspense(<Terms />) },
@@ -62,10 +73,10 @@ export const router = createBrowserRouter([
     path: '/admin',
     element: <AdminLayout />,
     children: [
-      { index: true, element: withSuspense(<AdminDashboard />) },
-      { path: 'products', element: withSuspense(<AdminProducts />) },
-      { path: 'orders', element: withSuspense(<AdminOrders />) },
-      { path: 'payments', element: withSuspense(<AdminPayments />) },
+      { index: true, element: withAdmin(<AdminDashboard />) },
+      { path: 'products', element: withAdmin(<AdminProducts />) },
+      { path: 'orders', element: withAdmin(<AdminOrders />) },
+      { path: 'payments', element: withAdmin(<AdminPayments />) },
     ],
   },
 ]);

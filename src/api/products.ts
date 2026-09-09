@@ -2,17 +2,14 @@ import { apiClient } from './client';
 import type { Product } from '../types';
 import { products as mockProducts, getProductBySlug as mockGetBySlug } from '../data/products';
 
-/**
- * Product API layer.
- * Currently falls back to mock data so the frontend works without a backend.
- * Replace the mock implementations with real API calls when ready.
- */
-export async function fetchProducts(): Promise<Product[]> {
+export async function fetchProducts(params?: {
+  category?: string;
+  q?: string;
+}): Promise<Product[]> {
   try {
-    const { data } = await apiClient.get<Product[]>('/products');
+    const { data } = await apiClient.get<Product[]>('/products', { params });
     return data;
   } catch {
-    // Fallback for development / offline
     return mockProducts;
   }
 }
@@ -24,4 +21,19 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
   } catch {
     return mockGetBySlug(slug) ?? null;
   }
+}
+
+export async function updateProduct(
+  id: string,
+  body: {
+    price?: number;
+    salePrice?: number | null;
+    stock?: number;
+    featured?: boolean;
+    bestseller?: boolean;
+    newArrival?: boolean;
+  }
+): Promise<Product> {
+  const { data } = await apiClient.patch<Product>(`/products/${id}`, body);
+  return data;
 }

@@ -91,20 +91,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
         {/* Quick add (shows on hover) – for demo we just link to product */}
         <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button
-            
-            size="sm"
-            fullWidth
-            className="bg-white text-brand-900 hover:bg-brand-50 shadow-md"
-            onClick={(e) => {
-              e.preventDefault();
-              // In a full version this could open a quick-view modal
-              window.location.href = `/product/${product.slug}`;
-            }}
-          >
+          <span className="flex h-9 w-full items-center justify-center rounded-md bg-white text-brand-900 text-sm font-medium shadow-md">
             <ShoppingBag className="h-4 w-4 mr-2" />
-            Quick View
-          </Button>
+            View product
+          </span>
         </div>
       </Link>
 

@@ -1,25 +1,32 @@
 import { apiClient } from './client';
-import type { Order, CartItem, ShippingAddress } from '../types';
+import type { CartItem, ShippingAddress } from '../types';
 
 export interface CreateOrderPayload {
   email: string;
-  items: CartItem[];
+  items: Array<{
+    productId: string;
+    colour: string;
+    size: string;
+    quantity: number;
+  }>;
   shippingAddress: ShippingAddress;
   deliveryMethod: string;
-  // Never send raw card data – only a payment intent / session id from Stripe
-  paymentIntentId?: string;
 }
 
-/**
- * Create an order on the backend.
- * Backend must re-validate prices and stock.
- */
-export async function createOrder(payload: CreateOrderPayload): Promise<Order> {
-  const { data } = await apiClient.post<Order>('/orders', payload);
+export async function createOrder(payload: CreateOrderPayload) {
+  const { data } = await apiClient.post('/orders', payload);
   return data;
 }
 
-export async function fetchOrder(orderId: string): Promise<Order> {
-  const { data } = await apiClient.get<Order>(`/orders/${orderId}`);
+export async function fetchOrders() {
+  const { data } = await apiClient.get('/orders');
+  return data;
+}
+
+export async function updateOrderStatus(
+  id: string,
+  body: { status?: string; paymentStatus?: string }
+) {
+  const { data } = await apiClient.patch(`/orders/${id}/status`, body);
   return data;
 }

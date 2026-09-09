@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
+import { ShoppingCart, DollarSign, AlertTriangle, Bell } from 'lucide-react';
 import { useAdminStore } from '../../store/adminStore';
+import { useWaitlistStore } from '../../store/waitlistStore';
 import { formatPrice } from '../../utils/format';
-import { Package, ShoppingCart, DollarSign, AlertTriangle } from 'lucide-react';
 
 export function AdminDashboard() {
   const orders = useAdminStore((s) => s.orders);
   const products = useAdminStore((s) => s.products);
+  const threshold = useAdminStore((s) => s.lowStockThreshold);
+  const setLowStockThreshold = useAdminStore((s) => s.setLowStockThreshold);
+  const waitlistEntries = useWaitlistStore((s) => s.entries);
 
-  // Compute stats in useMemo — never return a new object from a Zustand selector
   const stats = useMemo(() => {
     const paidOrders = orders.filter((o) => o.paymentStatus === 'paid');
     return {
@@ -18,9 +21,10 @@ export function AdminDashboard() {
       pendingOrders: orders.filter(
         (o) => o.status === 'pending' || o.status === 'processing'
       ).length,
-      lowStock: products.filter((p) => p.stock < 40).length,
+      lowStock: products.filter((p) => p.stock < threshold).length,
+      waitlist: waitlistEntries.length,
     };
-  }, [orders, products]);
+  }, [orders, products, threshold, waitlistEntries]);
 
   const recentOrders = useMemo(
     () =>
@@ -34,8 +38,12 @@ export function AdminDashboard() {
   );
 
   const lowStockProducts = useMemo(
-    () => products.filter((p) => p.stock < 40).slice(0, 5),
-    [products]
+    () =>
+      products
+        .filter((p) => p.stock < threshold)
+        .sort((a, b) => a.stock - b.stock)
+        .slice(0, 6),
+    [products, threshold]
   );
 
   const cards = [
@@ -52,26 +60,41 @@ export function AdminDashboard() {
       color: 'bg-blue-100 text-blue-700',
     },
     {
-      label: 'Products',
-      value: stats.totalProducts,
-      icon: Package,
-      color: 'bg-purple-100 text-purple-700',
-    },
-    {
-      label: 'Pending / processing',
-      value: stats.pendingOrders,
+      label: 'Low stock',
+      value: stats.lowStock,
       icon: AlertTriangle,
       color: 'bg-amber-100 text-amber-700',
+    },
+    {
+      label: 'Restock waitlist',
+      value: stats.waitlist,
+      icon: Bell,
+      color: 'bg-purple-100 text-purple-700',
     },
   ];
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-brand-950">Dashboard</h1>
-        <p className="mt-1 text-sm text-brand-500">
-          Overview of store performance and activity
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-brand-950">Dashboard</h1>
+          <p className="mt-1 text-sm text-brand-500">
+            Overview of store performance and activity
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <label htmlFor="threshold" className="text-brand-600">
+            Low-stock threshold
+          </label>
+          <input
+            id="threshold"
+            type="number"
+            min={1}
+            value={threshold}
+            onChange={(e) => setLowStockThreshold(Number(e.target.value) || 1)}
+            className="w-20 h-9 px-2 border border-brand-300 rounded-md"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-10">
@@ -125,7 +148,9 @@ export function AdminDashboard() {
 
         <div className="bg-white rounded-lg border border-brand-200 shadow-sm">
           <div className="flex items-center justify-between px-5 py-4 border-b border-brand-100">
-            <h2 className="font-semibold text-brand-950">Low stock</h2>
+            <h2 className="font-semibold text-brand-950">
+              Low stock (under {threshold})
+            </h2>
             <Link
               to="/admin/products"
               className="text-sm text-brand-600 hover:underline"
@@ -166,6 +191,21 @@ export function AdminDashboard() {
               ))
             )}
           </div>
+
+          {waitlistEntries.length > 0 && (
+            <div className="px-5 py-4 border-t border-brand-100">
+              <p className="text-xs font-medium text-brand-500 uppercase tracking-wider mb-2">
+                Waitlist demand
+              </p>
+              <ul className="space-y-1 text-sm text-brand-600">
+                {waitlistEntries.slice(0, 5).map((e) => (
+                  <li key={e.id}>
+                    {e.productName} — {e.colour}/{e.size} ({e.email})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>

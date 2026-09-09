@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminStore } from '../../store/adminStore';
 import { useToastStore } from '../../store/toastStore';
+import { updateProduct } from '../../api/products';
 import { formatPrice } from '../../utils/format';
 import { Button } from '../../components/common/Button';
 import type { Product } from '../../types';
@@ -44,7 +45,7 @@ export function AdminProducts() {
     setEditStock('');
   };
 
-  const saveEdit = (id: string) => {
+  const saveEdit = async (id: string) => {
     const price = parseFloat(editPrice);
     const sale = editSale.trim() === '' ? null : parseFloat(editSale);
     const stock = parseInt(editStock, 10);
@@ -62,10 +63,24 @@ export function AdminProducts() {
       return;
     }
 
-    updateProductPrice(id, price, sale);
-    updateProductStock(id, stock);
-    addToast('Product updated', 'success');
-    cancelEdit();
+    try {
+      await updateProduct(id, { price, salePrice: sale, stock });
+      updateProductPrice(id, price, sale);
+      updateProductStock(id, stock);
+      addToast('Product updated', 'success');
+      cancelEdit();
+    } catch (err) {
+      // Still update local store so UI works offline
+      updateProductPrice(id, price, sale);
+      updateProductStock(id, stock);
+      addToast(
+        err instanceof Error
+          ? `${err.message} (saved locally)`
+          : 'Saved locally',
+        'info'
+      );
+      cancelEdit();
+    }
   };
 
   return (

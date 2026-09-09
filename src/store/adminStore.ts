@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-//import type { Product, Order, CartItem, ShippingAddress } from '../types';
-import type { Product, CartItem, ShippingAddress } from '../types';
+import type { Product, Order, CartItem, ShippingAddress } from '../types';
 import { products as initialProducts } from '../data/products';
 
 export type OrderStatus =
@@ -31,6 +30,8 @@ export interface AdminOrder {
 interface AdminState {
   products: Product[];
   orders: AdminOrder[];
+  lowStockThreshold: number;
+  setLowStockThreshold: (n: number) => void;
   // Product actions
   updateProductPrice: (id: string, price: number, salePrice?: number | null) => void;
   updateProductStock: (id: string, stock: number) => void;
@@ -216,6 +217,8 @@ export const useAdminStore = create<AdminState>()(
     (set, get) => ({
       products: structuredClone(initialProducts),
       orders: seedOrders,
+      lowStockThreshold: 40,
+      setLowStockThreshold: (n) => set({ lowStockThreshold: Math.max(1, n) }),
 
       updateProductPrice: (id, price, salePrice) => {
         set((state) => ({
@@ -274,7 +277,7 @@ export const useAdminStore = create<AdminState>()(
           pendingOrders: orders.filter(
             (o) => o.status === 'pending' || o.status === 'processing'
           ).length,
-          lowStock: products.filter((p) => p.stock < 40).length,
+          lowStock: products.filter((p) => p.stock < get().lowStockThreshold).length,
         };
       },
     }),
@@ -283,6 +286,7 @@ export const useAdminStore = create<AdminState>()(
       partialize: (state) => ({
         products: state.products,
         orders: state.orders,
+        lowStockThreshold: state.lowStockThreshold,
       }),
     }
   )
