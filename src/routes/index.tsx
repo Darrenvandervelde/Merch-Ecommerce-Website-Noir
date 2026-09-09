@@ -21,6 +21,7 @@ const ShippingReturns = lazy(() => import('../pages/ShippingReturns').then((m) =
 const Privacy = lazy(() => import('../pages/Privacy').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
 const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
+const Compare = lazy(() => import('../pages/Compare').then((m) => ({ default: m.Compare })));
 
 const AdminDashboard = lazy(() => import('../pages/admin/Dashboard').then((m) => ({ default: m.AdminDashboard })));
 const AdminProducts = lazy(() => import('../pages/admin/Products').then((m) => ({ default: m.AdminProducts })));
@@ -66,6 +67,7 @@ export const router = createBrowserRouter([
       { path: 'shipping-returns', element: withSuspense(<ShippingReturns />) },
       { path: 'privacy', element: withSuspense(<Privacy />) },
       { path: 'terms', element: withSuspense(<Terms />) },
+      { path: 'compare', element: withSuspense(<Compare />) },
       { path: '*', element: withSuspense(<NotFound />) },
     ],
   },

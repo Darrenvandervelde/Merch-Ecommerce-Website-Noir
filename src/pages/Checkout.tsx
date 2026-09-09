@@ -21,6 +21,8 @@ const schema = z.object({
   country: z.string().min(1, 'Required'),
   phone: z.string().optional(),
   delivery: z.enum(['standard', 'express']),
+  giftWrap: z.boolean().optional(),
+  giftNote: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -325,6 +327,18 @@ export function Checkout() {
               </div>
             </dl>
 
+            <div className="mt-4 space-y-2 text-sm">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" {...register('giftWrap')} className="rounded border-brand-300" />
+                Eco gift packaging (+$5 at fulfilment)
+              </label>
+              <input
+                type="text"
+                placeholder="Gift note (optional)"
+                {...register('giftNote')}
+                className="w-full h-10 px-3 border border-brand-300 rounded-md text-sm"
+              />
+            </div>
             <Button
               type="submit"
               fullWidth

@@ -19,6 +19,7 @@ export function Shop() {
   const [selectedColours, setSelectedColours] = useState<string[]>([]);
   const [priceMax, setPriceMax] = useState(150);
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [onSaleOnly, setOnSaleOnly] = useState(false);
   const [search, setSearch] = useState(searchParams.get('q') || '');
 
   useEffect(() => {
@@ -65,6 +66,9 @@ export function Shop() {
     if (inStockOnly) {
       list = list.filter((p) => p.stock > 0);
     }
+    if (onSaleOnly) {
+      list = list.filter((p) => p.salePrice != null);
+    }
 
     switch (sort) {
       case 'newest':
@@ -92,6 +96,13 @@ export function Shop() {
       case 'highest-rated':
         list.sort((a, b) => b.rating - a.rating);
         break;
+      case 'discount':
+        list.sort((a, b) => {
+          const da = a.salePrice != null ? (a.price - a.salePrice) / a.price : 0;
+          const db = b.salePrice != null ? (b.price - b.salePrice) / b.price : 0;
+          return db - da;
+        });
+        break;
       case 'featured':
       default:
         list = [
@@ -111,6 +122,7 @@ export function Shop() {
     selectedColours,
     priceMax,
     inStockOnly,
+    onSaleOnly,
   ]);
 
   const handleCategory = (cat: string) => {
@@ -266,6 +278,15 @@ export function Shop() {
               />
               In stock only
             </label>
+            <label className="flex items-center gap-2 text-sm cursor-pointer mt-2">
+              <input
+                type="checkbox"
+                checked={onSaleOnly}
+                onChange={(e) => setOnSaleOnly(e.target.checked)}
+                className="rounded border-brand-300"
+              />
+              On sale
+            </label>
           </div>
 
           <div>
@@ -283,6 +304,7 @@ export function Shop() {
               <option value="price-desc">Price: High to Low</option>
               <option value="best-selling">Best Selling</option>
               <option value="highest-rated">Highest Rated</option>
+              <option value="discount">Biggest discount</option>
             </select>
           </div>
         </aside>

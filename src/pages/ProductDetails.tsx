@@ -11,6 +11,12 @@ import { Button } from '../components/common/Button';
 import { SizeGuidePanel } from '../components/products/SizeGuide';
 import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
+import { ModelViewer } from '../components/products/ModelViewer';
+import { FilamentPicker } from '../components/products/FilamentPicker';
+import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
+import { BundleUpsell } from '../components/products/BundleUpsell';
+import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
+import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -21,6 +27,8 @@ export function ProductDetails() {
   const [colour, setColour] = useState('');
   const [size, setSize] = useState('');
   const [qty, setQty] = useState(1);
+  const [filamentHex, setFilamentHex] = useState('#1a1a1a');
+  const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const addItem = useCartStore((s) => s.addItem);
   const addToWishlist = useWishlistStore((s) => s.addItem);
@@ -84,13 +92,26 @@ export function ProductDetails() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
-          <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
-            <img
-              src={product.images[0]}
-              alt={product.name}
-              className="h-full w-full object-cover"
-            />
-          </div>
+          {isPrint ? (
+            <ModelViewer product={product} filamentHex={filamentHex} />
+          ) : (
+            <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
+          {isPrint && (
+            <div className="aspect-[3/4] bg-brand-100 overflow-hidden rounded-lg">
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
           {product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-3">
               {product.images.map((img, i) => (
@@ -187,11 +208,26 @@ export function ProductDetails() {
             </div>
           </div>
 
-          <SizeGuidePanel
-            category={product.category}
-            productId={product.id}
-            
-          />
+
+          {isPrint && product.filaments && product.filaments.length > 0 && (
+            <div className="mt-6">
+              <FilamentPicker
+                options={product.filaments}
+                value={colour}
+                onChange={(name, hex) => {
+                  setColour(name);
+                  setFilamentHex(hex);
+                }}
+              />
+            </div>
+          )}
+
+          {!isPrint && (
+            <SizeGuidePanel
+              category={product.category === 'print3d' ? 'tshirt' : product.category}
+              productId={product.id}
+            />
+          )}
 
           <div className="mt-6">
             <p className="text-sm font-medium text-brand-900 mb-3">Quantity</p>
@@ -226,6 +262,12 @@ export function ProductDetails() {
             colour={colour}
             size={size}
             inStock={variantInStock}
+          />
+
+          <PrintTimeEstimate
+            specs={product.printSpecs}
+            isPrint3d={isPrint}
+            stock={product.stock}
           />
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3">

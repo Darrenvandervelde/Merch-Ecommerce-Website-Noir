@@ -1,5 +1,22 @@
 export type ProductCategory = 'tshirt' | 'hoodie' | 'print3d';
 
+export interface FilamentOption {
+  name: string;
+  hex: string;
+  finish?: string;
+}
+
+export interface PrintSpecs {
+  material: string;
+  layerHeight: string;
+  infill: string;
+  dimensions: string;
+  printTimeHours: number;
+  weightGrams?: number;
+  eco?: boolean;
+}
+
+
 export interface Product {
   id: string;
   name: string;
@@ -18,7 +35,28 @@ export interface Product {
   bestseller: boolean;
   newArrival: boolean;
   tags?: string[];
+  /** 3D Lab only */
+  filaments?: FilamentOption[];
+  printSpecs?: PrintSpecs;
+  bundleWith?: string[]; // product ids
+  modelType?: 'sculpture' | 'planter' | 'hub' | 'stand' | 'mask' | 'generic';
 }
+
+export interface PhotoReview extends Review {
+  photoUrl?: string;
+}
+
+export interface CompareItem {
+  productId: string;
+  name: string;
+  slug: string;
+  image: string;
+  price: number;
+  salePrice?: number;
+  category: ProductCategory;
+  printSpecs?: PrintSpecs;
+}
+
 
 export interface CartItem {
   productId: string;
