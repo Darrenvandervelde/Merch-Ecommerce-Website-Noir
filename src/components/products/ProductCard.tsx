@@ -6,7 +6,6 @@ import { useWishlistStore } from '../../store/wishlistStore';
 import { useToastStore } from '../../store/toastStore';
 import { formatPrice, getDiscountPercent } from '../../utils/format';
 import { cn } from '../../utils/cn';
-import { Button } from '../common/Button';
 
 interface ProductCardProps {
   product: Product;

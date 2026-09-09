@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { login } from '../api/auth';
+import { login, type LoginPayload } from '../api/auth';
 import { useAuthStore } from '../store/authStore';
 import { useToastStore } from '../store/toastStore';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -32,7 +32,7 @@ export function Login() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await login(data);
+      const res = await login(data as LoginPayload);
       setAuth(res.token, res.user);
       addToast(`Welcome back, ${res.user.firstName}`, 'success');
       navigate(from, { replace: true });

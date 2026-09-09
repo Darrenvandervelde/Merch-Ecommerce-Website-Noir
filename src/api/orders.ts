@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { CartItem, ShippingAddress } from '../types';
+import type { ShippingAddress } from '../types';
 
 export interface CreateOrderPayload {
   email: string;

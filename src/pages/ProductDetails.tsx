@@ -219,7 +219,7 @@ export function ProductDetails() {
 
           <RestockAlert
             productId={product.id}
-            
+            productName={product.name}
             colour={colour}
             size={size}
             inStock={variantInStock}
