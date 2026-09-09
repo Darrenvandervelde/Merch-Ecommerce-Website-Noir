@@ -28,7 +28,7 @@ export function ProductDetails() {
   const [size, setSize] = useState('');
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
-  const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
+  //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const addItem = useCartStore((s) => s.addItem);
   const addToWishlist = useWishlistStore((s) => s.addItem);
