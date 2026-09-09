@@ -38,6 +38,13 @@ export const sizeGuides: Record<ProductCategory, SizeGuide> = {
       { size: 'XXL', chest: '48–50"', length: '30"', sleeve: '26"' },
     ],
   },
+  print3d: {
+    category: "print3d",
+    fitNote: "Dimensions vary by 3D model design.",
+    rows: [
+      { size: "Standard", chest: "N/A", length: "N/A", sleeve: "N/A" }
+    ]
+  }
 };
 
 export type FitVote = 'small' | 'true' | 'large';
