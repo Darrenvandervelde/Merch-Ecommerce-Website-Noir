@@ -1,0 +1,16 @@
+name: Current Deployments
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+      
+  pull_request:
+    branches:
+      - main
+
+jobs: 
+  system: 
+    name: deploy to stage
+    runs-on: windows-lastest
