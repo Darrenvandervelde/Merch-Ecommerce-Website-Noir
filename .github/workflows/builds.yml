@@ -1,16 +1,25 @@
-name: Current Deployments
+name: Node.js CI
 
-on:
-  push:
+on: 
+  push: 
     branches:
       - main
-      - release/*
-      
-  pull_request:
+
+  pull_request: 
     branches:
       - main
 
 jobs: 
-  system: 
-    name: deploy to stage
+  build: 
+
     runs-on: windows-lastest
+    
+    steps: 
+      - uses: actions/checkout@v6
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with: 
+          node-version: '20.x'
+      - run: npm CI
+      - run: npm run build --if-present
+      - run: npm test
