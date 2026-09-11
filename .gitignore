@@ -26,5 +26,4 @@ dist-ssr
 # Env
 .env
 .env.local
-.env.local.ide
 .env.*.local
