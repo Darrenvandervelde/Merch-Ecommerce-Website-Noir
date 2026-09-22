@@ -2,6 +2,8 @@
 
 Production-ready merchandise store for hoodies and T-shirts built with React, Vite, TypeScript, Tailwind CSS, Zustand, React Hook Form + Zod, and React Router.
 
+<!-- Test Commit - Comment out a blank Line of code -->
+
 ## Features
 
 - Premium streetwear design system
