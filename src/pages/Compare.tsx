@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useCompareStore } from '../store/compareStore';
+import { useAdminStore } from '../store/adminStore';
+import { useCartStore } from '../store/cartStore';
+import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -9,6 +12,9 @@ export function Compare() {
   const items = useCompareStore((s) => s.items);
   const removeItem = useCompareStore((s) => s.removeItem);
   const clear = useCompareStore((s) => s.clear);
+  const products = useAdminStore((s) => s.products);
+  const addItem = useCartStore((s) => s.addItem);
+  const addToast = useToastStore((s) => s.addToast);
 
   if (items.length === 0) {
     return (
@@ -23,6 +29,19 @@ export function Compare() {
       </div>
     );
   }
+
+  const fullProducts = items.map(
+    (i) => products.find((p) => p.id === i.productId) ?? null
+  );
+
+  const addDefault = (productId: string) => {
+    const p = products.find((x) => x.id === productId);
+    if (!p) return;
+    const colour = p.filaments?.[0]?.name ?? p.colours[0] ?? '';
+    const size = p.sizes[0] ?? '';
+    const r = addItem(p, colour, size, 1);
+    addToast(r.message, r.success ? 'success' : 'error');
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -74,6 +93,28 @@ export function Compare() {
               ))}
             </tr>
             <tr>
+              <td className="p-3 border-b text-brand-500">Rating</td>
+              {fullProducts.map((p, idx) => (
+                <td key={items[idx].productId} className="p-3 border-b">
+                  {p
+                    ? `★ ${p.rating.toFixed(1)} (${p.reviewCount})`
+                    : '—'}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="p-3 border-b text-brand-500">Stock</td>
+              {fullProducts.map((p, idx) => (
+                <td key={items[idx].productId} className="p-3 border-b">
+                  {p
+                    ? p.stock > 0
+                      ? `${p.stock} in stock`
+                      : 'Out of stock'
+                    : '—'}
+                </td>
+              ))}
+            </tr>
+            <tr>
               <td className="p-3 border-b text-brand-500">Material</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
@@ -109,9 +150,17 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Print time</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs
-                    ? `${i.printSpecs.printTimeHours}h`
-                    : '—'}
+                  {i.printSpecs ? `${i.printSpecs.printTimeHours}h` : '—'}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="p-3 border-b text-brand-500">Action</td>
+              {items.map((i) => (
+                <td key={i.productId} className="p-3 border-b">
+                  <Button size="sm" onClick={() => addDefault(i.productId)}>
+                    Add to cart
+                  </Button>
                 </td>
               ))}
             </tr>
