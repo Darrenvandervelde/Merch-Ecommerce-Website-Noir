@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useAdminStore } from '../store/adminStore';
@@ -17,6 +17,7 @@ import { FilamentPicker } from '../components/products/FilamentPicker';
 //import { BundleUpsell } from '../components/products/BundleUpsell';
 //import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
+import { StickyAddToCart } from '../components/products/StickyAddToCart';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -28,7 +29,11 @@ export function ProductDetails() {
   const [size, setSize] = useState('');
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
+  const [actionsVisible, setActionsVisible] = useState(true);
   //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
+
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   const addItem = useCartStore((s) => s.addItem);
   const addToWishlist = useWishlistStore((s) => s.addItem);
@@ -42,6 +47,19 @@ export function ProductDetails() {
     product?.name ?? 'Product',
     product?.description?.slice(0, 155)
   );
+
+  useEffect(() => {
+    const el = actionsRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setActionsVisible(entry.isIntersecting),
+      { threshold: 0.15, rootMargin: '0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [product?.id]);
 
   if (!product) {
     return (
@@ -68,6 +86,15 @@ export function ProductDetails() {
     addToast(result.message, result.success ? 'success' : 'error');
   };
 
+  const handleStickyAddToCart = () => {
+    if (!colour || !size) {
+      optionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      addToast('Please select colour and size to add to cart.', 'info');
+      return;
+    }
+    handleAddToCart();
+  };
+
   const handleWishlist = () => {
     if (isInWishlist) {
       removeFromWishlist(product.id);
@@ -89,7 +116,7 @@ export function ProductDetails() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 pb-28 lg:pb-10">
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
@@ -164,7 +191,7 @@ export function ProductDetails() {
             {product.description}
           </p>
 
-          <div className="mt-8">
+          <div className="mt-8" ref={optionsRef}>
             <p className="text-sm font-medium text-brand-900 mb-3">
               {colourLabel}: <span className="font-normal">{colour || 'Select'}</span>
             </p>
@@ -270,7 +297,7 @@ export function ProductDetails() {
             stock={product.stock}
           />
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+          <div ref={actionsRef} className="mt-8 flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
               fullWidth
@@ -322,6 +349,16 @@ export function ProductDetails() {
       </div>
 
       <ShopTheLook current={product} products={products} />
+
+      <StickyAddToCart
+        product={product}
+        colour={colour}
+        size={size}
+        quantity={qty}
+        visible={!actionsVisible}
+        inStock={variantInStock}
+        onAddToCart={handleStickyAddToCart}
+      />
     </div>
   );
 }
