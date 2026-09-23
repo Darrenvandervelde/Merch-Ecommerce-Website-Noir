@@ -2,10 +2,12 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useOpenGraph } from '../hooks/useOpenGraph';
 import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
+import { useRecentlyViewedStore } from '../store/recentlyViewedStore';
 import { formatPrice, getDiscountPercent } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { SizeGuidePanel } from '../components/products/SizeGuide';
@@ -39,6 +41,7 @@ export function ProductDetails() {
     product ? s.isInWishlist(product.id) : false
   );
   const addToast = useToastStore((s) => s.addToast);
+  const trackView = useRecentlyViewedStore((s) => s.track);
 
   useDocumentTitle(
     product?.name ?? 'Product',
@@ -52,14 +55,12 @@ export function ProductDetails() {
   useEffect(() => {
     const el = actionsRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry) handleActionsIntersect(entry.isIntersecting);
       },
-      { threshold: 0.15, rootMargin: '0px' }
+      { threshold: 0.15 }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, [product?.id, handleActionsIntersect]);
@@ -81,7 +82,6 @@ export function ProductDetails() {
   const discount = product.salePrice
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
-
   const variantInStock = product.stock > 0;
 
   const handleAddToCart = () => {
@@ -120,43 +120,17 @@ export function ProductDetails() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 pb-28 lg:pb-10">
+      <ProductJsonLd product={product} />
+
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
-            <ModelViewer product={product} filamentHex={filamentHex} />
+            <>
+              <ModelViewer product={product} filamentHex={filamentHex} />
+              <ProductImageGallery images={product.images} alt={product.name} />
+            </>
           ) : (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {isPrint && (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden rounded-lg">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-3">
-              {product.images.map((img, i) => (
-                <div
-                  key={i}
-                  className="aspect-square bg-brand-100 overflow-hidden"
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
+            <ProductImageGallery images={product.images} alt={product.name} />
           )}
         </div>
 
@@ -174,14 +148,10 @@ export function ProductDetails() {
                 <span className="text-lg text-brand-400 line-through">
                   {formatPrice(product.price)}
                 </span>
-                <span className="text-sm font-medium text-red-600">
-                  -{discount}%
-                </span>
+                <span className="text-sm font-medium text-red-600">-{discount}%</span>
               </>
             ) : (
-              <span className="text-2xl font-semibold">
-                {formatPrice(product.price)}
-              </span>
+              <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
             )}
           </div>
 
@@ -190,9 +160,7 @@ export function ProductDetails() {
             {product.rating.toFixed(1)} ({product.reviewCount} reviews)
           </div>
 
-          <p className="mt-6 text-brand-600 leading-relaxed">
-            {product.description}
-          </p>
+          <p className="mt-6 text-brand-600 leading-relaxed">{product.description}</p>
 
           <div className="mt-8" ref={optionsRef}>
             <p className="text-sm font-medium text-brand-900 mb-3">
@@ -280,9 +248,6 @@ export function ProductDetails() {
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-2 text-xs text-brand-500">
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-            </p>
           </div>
 
           <RestockAlert
@@ -319,9 +284,7 @@ export function ProductDetails() {
             </Button>
             <Button size="lg" variant="outline" onClick={handleWishlist}>
               <Heart
-                className={`h-4 w-4 mr-2 ${
-                  isInWishlist ? 'fill-current text-red-500' : ''
-                }`}
+                className={`h-4 w-4 mr-2 ${isInWishlist ? 'fill-current text-red-500' : ''}`}
               />
               {isInWishlist ? 'In Wishlist' : 'Wishlist'}
             </Button>
@@ -337,6 +300,7 @@ export function ProductDetails() {
 
       <BundleBuilder current={product} catalog={products} />
       <ShopTheLook current={product} products={products} />
+      <RecentlyViewed excludeId={product.id} />
 
       <StickyAddToCart
         product={product}
