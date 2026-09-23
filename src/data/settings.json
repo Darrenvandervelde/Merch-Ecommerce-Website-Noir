@@ -1,0 +1,29 @@
+{
+  "app": {
+    "name": "NOIR",
+    "tagline": "Premium Streetwear + 3D Lab",
+    "currency": "USD",
+    "locale": "en-US",
+    "freeShippingThreshold": 100,
+    "shippingFlatRate": 8,
+    "taxRate": 0.08
+  },
+  "store": {
+    "supportEmail": "support@noir.example",
+    "returnsDays": 30,
+    "estimatedDeliveryDaysMin": 3,
+    "estimatedDeliveryDaysMax": 7
+  },
+  "features": {
+    "stickyAddToCart": true,
+    "recentlyViewed": true,
+    "compare": true,
+    "waitlist": true,
+    "darkMode": false
+  },
+  "lab3d": {
+    "enabled": true,
+    "label": "3D Lab",
+    "madeToOrderLeadDays": 5
+  }
+}

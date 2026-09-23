@@ -1,0 +1,7 @@
+{
+  "$schema": "./products.catalog.schema.json",
+  "version": 1,
+  "note": "Canonical product catalogue in JSON. Runtime still uses products.ts until fully migrated; keep both in sync or generate one from the other.",
+  "categories": ["tshirt", "hoodie", "print3d"],
+  "source": "src/data/products.ts"
+}
