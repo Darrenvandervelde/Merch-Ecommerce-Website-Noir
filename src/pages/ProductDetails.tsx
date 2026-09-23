@@ -18,6 +18,7 @@ import { FilamentPicker } from '../components/products/FilamentPicker';
 //import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
+import { ProductJsonLd } from '../components/products/ProductJsonLd';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -124,6 +125,8 @@ export function ProductDetails() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 pb-28 lg:pb-10">
+      <ProductJsonLd product={product} />
+
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
