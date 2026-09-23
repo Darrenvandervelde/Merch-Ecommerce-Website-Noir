@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useOpenGraph } from '../hooks/useOpenGraph';
 import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
@@ -16,7 +17,7 @@ import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
-import { RecentlyViewed } from '../components/products/RecentlyViewed';
+import { ProductJsonLd } from '../components/products/ProductJsonLd';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -47,9 +48,19 @@ export function ProductDetails() {
     product?.description?.slice(0, 155)
   );
 
-  useEffect(() => {
-    if (product) trackView(product);
-  }, [product?.id, trackView]);
+  useOpenGraph({
+    title: product?.name ?? 'Product',
+    description: product?.description?.slice(0, 200),
+    image: product?.images[0],
+    type: 'product',
+    price: product ? (product.salePrice ?? product.price) : undefined,
+    currency: 'USD',
+    availability: product
+      ? product.stock > 0
+        ? 'in stock'
+        : 'out of stock'
+      : undefined,
+  });
 
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
@@ -58,14 +69,12 @@ export function ProductDetails() {
   useEffect(() => {
     const el = actionsRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry) handleActionsIntersect(entry.isIntersecting);
       },
-      { threshold: 0.15, rootMargin: '0px' }
+      { threshold: 0.15 }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, [product?.id, handleActionsIntersect]);
@@ -125,36 +134,17 @@ export function ProductDetails() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 pb-28 lg:pb-10">
+      <ProductJsonLd product={product} />
+
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
-            <ModelViewer product={product} filamentHex={filamentHex} />
+            <>
+              <ModelViewer product={product} filamentHex={filamentHex} />
+              <ProductImageGallery images={product.images} alt={product.name} />
+            </>
           ) : (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {isPrint && (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden rounded-lg">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-3">
-              {product.images.map((img, i) => (
-                <div key={i} className="aspect-square bg-brand-100 overflow-hidden">
-                  <img src={img} alt="" className="h-full w-full object-cover" />
-                </div>
-              ))}
-            </div>
+            <ProductImageGallery images={product.images} alt={product.name} />
           )}
         </div>
 
@@ -272,9 +262,6 @@ export function ProductDetails() {
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-2 text-xs text-brand-500">
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-            </p>
           </div>
 
           <RestockAlert
@@ -311,19 +298,11 @@ export function ProductDetails() {
             </Button>
             <Button size="lg" variant="outline" onClick={handleWishlist}>
               <Heart
-                className={`h-4 w-4 mr-2 ${
-                  isInWishlist ? 'fill-current text-red-500' : ''
-                }`}
+                className={`h-4 w-4 mr-2 ${isInWishlist ? 'fill-current text-red-500' : ''}`}
               />
               {isInWishlist ? 'In Wishlist' : 'Wishlist'}
             </Button>
           </div>
-
-          {(!colour || !size) && variantInStock && (
-            <p className="mt-3 text-sm text-brand-500">
-              Please select colour and size to add to cart.
-            </p>
-          )}
         </div>
       </div>
 

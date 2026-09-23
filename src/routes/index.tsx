@@ -10,6 +10,7 @@ const ProductDetails = lazy(() => import('../pages/ProductDetails').then((m) => 
 const Cart = lazy(() => import('../pages/Cart').then((m) => ({ default: m.Cart })));
 const Checkout = lazy(() => import('../pages/Checkout').then((m) => ({ default: m.Checkout })));
 const OrderConfirmation = lazy(() => import('../pages/OrderConfirmation').then((m) => ({ default: m.OrderConfirmation })));
+const OrderTracking = lazy(() => import('../pages/OrderTracking').then((m) => ({ default: m.OrderTracking })));
 const About = lazy(() => import('../pages/About').then((m) => ({ default: m.About })));
 const Contact = lazy(() => import('../pages/Contact').then((m) => ({ default: m.Contact })));
 const FAQ = lazy(() => import('../pages/FAQ').then((m) => ({ default: m.FAQ })));
@@ -57,6 +58,8 @@ export const router = createBrowserRouter([
       { path: 'cart', element: withSuspense(<Cart />) },
       { path: 'checkout', element: withSuspense(<Checkout />) },
       { path: 'order-confirmation/:orderId', element: withSuspense(<OrderConfirmation />) },
+      { path: 'track', element: withSuspense(<OrderTracking />) },
+      { path: 'track/:orderId', element: withSuspense(<OrderTracking />) },
       { path: 'about', element: withSuspense(<About />) },
       { path: 'contact', element: withSuspense(<Contact />) },
       { path: 'faq', element: withSuspense(<FAQ />) },
