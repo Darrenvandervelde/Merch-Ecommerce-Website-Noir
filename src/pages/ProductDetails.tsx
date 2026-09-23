@@ -13,11 +13,9 @@ import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
 import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
-//import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
-//import { BundleUpsell } from '../components/products/BundleUpsell';
-//import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
+import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,7 +28,6 @@ export function ProductDetails() {
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
   const [actionsVisible, setActionsVisible] = useState(true);
-  //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const actionsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -48,7 +45,6 @@ export function ProductDetails() {
     product?.description?.slice(0, 155)
   );
 
-  // Only update state when intersection actually changes (avoids redundant sets).
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
   }, []);
@@ -242,7 +238,6 @@ export function ProductDetails() {
             </div>
           </div>
 
-
           {isPrint && product.filaments && product.filaments.length > 0 && (
             <div className="mt-6">
               <FilamentPicker
@@ -337,25 +332,11 @@ export function ProductDetails() {
               Please select colour and size to add to cart.
             </p>
           )}
-
-          <div className="mt-10 pt-8 border-t border-brand-200 space-y-3 text-sm text-brand-600">
-            <p>
-              <strong className="text-brand-900">Shipping:</strong> Free on
-              orders over $100. 3–7 business days.
-            </p>
-            <p>
-              <strong className="text-brand-900">Returns:</strong> 30-day easy
-              returns. Free return shipping.
-            </p>
-            <p>
-              <strong className="text-brand-900">Care:</strong> Machine wash
-              cold, inside out. Hang dry or tumble low. Avoid bleach.
-            </p>
-          </div>
         </div>
       </div>
 
       <ShopTheLook current={product} products={products} />
+      <PhotoReviewGallery productId={product.id} />
 
       <StickyAddToCart
         product={product}
