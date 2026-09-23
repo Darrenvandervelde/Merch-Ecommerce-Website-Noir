@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { usePromoStore } from '../store/promoStore';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
-import { FreeShippingBar, FREE_SHIPPING_THRESHOLD } from '../components/cart/FreeShippingBar';
+import { PromoCodeInput } from '../components/cart/PromoCodeInput';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 export function Cart() {
@@ -20,9 +21,13 @@ export function Cart() {
       return sum + unit * item.quantity;
     }, 0)
   );
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 8;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+
+  const discount = usePromoStore((s) => s.getDiscountAmount(subtotal));
+  const freeShipPromo = usePromoStore((s) => s.isFreeShipping());
+  const afterDiscount = Math.max(0, subtotal - discount);
+  const shipping = freeShipPromo || afterDiscount >= 100 ? 0 : 8;
+  const tax = afterDiscount * 0.08;
+  const total = afterDiscount + shipping + tax;
 
   if (items.length === 0) {
     return (
@@ -162,13 +167,21 @@ export function Cart() {
           <div className="bg-brand-50 rounded-lg p-6 sticky top-24">
             <h2 className="text-lg font-semibold text-brand-950">Order Summary</h2>
 
-            <FreeShippingBar subtotal={subtotal} className="mt-4" />
+            <div className="mt-4">
+              <PromoCodeInput subtotal={subtotal} />
+            </div>
 
             <dl className="mt-6 space-y-3 text-sm">
               <div className="flex justify-between">
                 <dt className="text-brand-600">Subtotal</dt>
                 <dd className="font-medium">{formatPrice(subtotal)}</dd>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-700">
+                  <dt>Discount</dt>
+                  <dd className="font-medium">−{formatPrice(discount)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-brand-600">Shipping</dt>
                 <dd className="font-medium">
@@ -200,6 +213,10 @@ export function Cart() {
             >
               Continue shopping
             </Link>
+
+            <p className="mt-4 text-[11px] text-brand-400 text-center">
+              Demo codes: NOIR10 · FREESHIP · LAB15 · WELCOME5
+            </p>
           </div>
         </div>
       </div>
