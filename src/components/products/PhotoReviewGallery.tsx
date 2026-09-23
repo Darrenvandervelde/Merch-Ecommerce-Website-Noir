@@ -12,6 +12,8 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
   const addToast = useToastStore((s) => s.addToast);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [rating, setRating] = useState(5);
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   const handleUploadDemo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,13 +23,14 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
     );
     setTitle('');
     setBody('');
+    setRating(5);
   };
 
   return (
     <section className="mt-12 border-t border-brand-200 pt-10">
       <h2 className="text-xl font-bold text-brand-950">Customer photos & reviews</h2>
       <p className="mt-1 text-sm text-brand-500">
-        See how this piece looks in real setups
+        See how this piece looks in real life — verified buyers only below
       </p>
 
       {reviews.length > 0 ? (
@@ -38,11 +41,18 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
               className="rounded-lg border border-brand-200 overflow-hidden bg-white"
             >
               {r.photoUrl && (
-                <img
-                  src={r.photoUrl}
-                  alt=""
-                  className="h-40 w-full object-cover bg-brand-100"
-                />
+                <button
+                  type="button"
+                  className="block w-full cursor-zoom-in"
+                  onClick={() => setLightbox(r.photoUrl!)}
+                  aria-label="Open review photo"
+                >
+                  <img
+                    src={r.photoUrl}
+                    alt=""
+                    className="h-40 w-full object-cover bg-brand-100 transition hover:opacity-95"
+                  />
+                </button>
               )}
               <div className="p-4">
                 <div className="flex items-center gap-2 text-sm">
@@ -63,7 +73,9 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
           ))}
         </div>
       ) : (
-        <p className="mt-4 text-sm text-brand-500">No photo reviews yet — be the first.</p>
+        <p className="mt-4 text-sm text-brand-500">
+          No photo reviews yet — be the first to share how it looks on you.
+        </p>
       )}
 
       <form
@@ -71,6 +83,21 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
         className="mt-8 max-w-lg space-y-3 rounded-lg border border-brand-200 p-4"
       >
         <p className="text-sm font-medium text-brand-900">Share a photo review</p>
+        <div className="flex gap-1" role="group" aria-label="Rating">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setRating(n)}
+              className={`text-lg ${
+                n <= rating ? 'text-amber-500' : 'text-brand-300'
+              }`}
+              aria-label={`${n} stars`}
+            >
+              ★
+            </button>
+          ))}
+        </div>
         <input
           type="text"
           placeholder="Title"
@@ -80,7 +107,7 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
           className="w-full h-10 px-3 border border-brand-300 rounded-md text-sm"
         />
         <textarea
-          placeholder="How does it look in your space?"
+          placeholder="How does it look in your space / on you?"
           value={body}
           onChange={(e) => setBody(e.target.value)}
           required
@@ -96,7 +123,26 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
         <Button type="submit" size="sm">
           Submit review
         </Button>
+        <p className="text-[11px] text-brand-400">
+          Demo only — submissions are not stored on a server yet.
+        </p>
       </form>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setLightbox(null)}
+        >
+          <img
+            src={lightbox}
+            alt="Review photo"
+            className="max-h-[90vh] max-w-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </section>
   );
 }

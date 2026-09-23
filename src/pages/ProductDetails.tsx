@@ -17,6 +17,7 @@ import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
+import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { BundleBuilder } from '../components/products/BundleBuilder';
 
 export function ProductDetails() {
@@ -300,6 +301,7 @@ export function ProductDetails() {
 
       <BundleBuilder current={product} catalog={products} />
       <ShopTheLook current={product} products={products} />
+      <PhotoReviewGallery productId={product.id} />
       <RecentlyViewed excludeId={product.id} />
 
       <StickyAddToCart
