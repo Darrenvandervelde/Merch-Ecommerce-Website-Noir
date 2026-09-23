@@ -6,6 +6,7 @@ import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
+import { useRecentlyViewedStore } from '../store/recentlyViewedStore';
 import { formatPrice, getDiscountPercent } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { SizeGuidePanel } from '../components/products/SizeGuide';
@@ -13,11 +14,9 @@ import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
 import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
-//import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
-//import { BundleUpsell } from '../components/products/BundleUpsell';
-//import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
+import { RecentlyViewed } from '../components/products/RecentlyViewed';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,7 +29,6 @@ export function ProductDetails() {
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
   const [actionsVisible, setActionsVisible] = useState(true);
-  //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const actionsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -42,13 +40,17 @@ export function ProductDetails() {
     product ? s.isInWishlist(product.id) : false
   );
   const addToast = useToastStore((s) => s.addToast);
+  const trackView = useRecentlyViewedStore((s) => s.track);
 
   useDocumentTitle(
     product?.name ?? 'Product',
     product?.description?.slice(0, 155)
   );
 
-  // Only update state when intersection actually changes (avoids redundant sets).
+  useEffect(() => {
+    if (product) trackView(product);
+  }, [product?.id, trackView]);
+
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
   }, []);
@@ -85,7 +87,6 @@ export function ProductDetails() {
   const discount = product.salePrice
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
-
   const variantInStock = product.stock > 0;
 
   const handleAddToCart = () => {
@@ -149,15 +150,8 @@ export function ProductDetails() {
           {product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-3">
               {product.images.map((img, i) => (
-                <div
-                  key={i}
-                  className="aspect-square bg-brand-100 overflow-hidden"
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
+                <div key={i} className="aspect-square bg-brand-100 overflow-hidden">
+                  <img src={img} alt="" className="h-full w-full object-cover" />
                 </div>
               ))}
             </div>
@@ -178,14 +172,10 @@ export function ProductDetails() {
                 <span className="text-lg text-brand-400 line-through">
                   {formatPrice(product.price)}
                 </span>
-                <span className="text-sm font-medium text-red-600">
-                  -{discount}%
-                </span>
+                <span className="text-sm font-medium text-red-600">-{discount}%</span>
               </>
             ) : (
-              <span className="text-2xl font-semibold">
-                {formatPrice(product.price)}
-              </span>
+              <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
             )}
           </div>
 
@@ -194,9 +184,7 @@ export function ProductDetails() {
             {product.rating.toFixed(1)} ({product.reviewCount} reviews)
           </div>
 
-          <p className="mt-6 text-brand-600 leading-relaxed">
-            {product.description}
-          </p>
+          <p className="mt-6 text-brand-600 leading-relaxed">{product.description}</p>
 
           <div className="mt-8" ref={optionsRef}>
             <p className="text-sm font-medium text-brand-900 mb-3">
@@ -241,7 +229,6 @@ export function ProductDetails() {
               ))}
             </div>
           </div>
-
 
           {isPrint && product.filaments && product.filaments.length > 0 && (
             <div className="mt-6">
@@ -337,25 +324,11 @@ export function ProductDetails() {
               Please select colour and size to add to cart.
             </p>
           )}
-
-          <div className="mt-10 pt-8 border-t border-brand-200 space-y-3 text-sm text-brand-600">
-            <p>
-              <strong className="text-brand-900">Shipping:</strong> Free on
-              orders over $100. 3–7 business days.
-            </p>
-            <p>
-              <strong className="text-brand-900">Returns:</strong> 30-day easy
-              returns. Free return shipping.
-            </p>
-            <p>
-              <strong className="text-brand-900">Care:</strong> Machine wash
-              cold, inside out. Hang dry or tumble low. Avoid bleach.
-            </p>
-          </div>
         </div>
       </div>
 
       <ShopTheLook current={product} products={products} />
+      <RecentlyViewed excludeId={product.id} />
 
       <StickyAddToCart
         product={product}
