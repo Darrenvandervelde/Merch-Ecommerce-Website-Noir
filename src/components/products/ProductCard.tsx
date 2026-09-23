@@ -26,6 +26,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
 
+  const isMadeToOrder =
+    product.category === 'print3d' && (product.stock <= 10 || product.stock === 0);
+
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -39,13 +42,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   };
 
   return (
-    <article
-      className={cn(
-        'group relative flex flex-col bg-white',
-        className
-      )}
-    >
-      {/* Image */}
+    <article className={cn('group relative flex flex-col bg-white', className)}>
       <Link
         to={`/product/${product.slug}`}
         className="relative aspect-[3/4] overflow-hidden bg-brand-100"
@@ -57,7 +54,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           {product.newArrival && (
             <span className="bg-brand-900 text-white text-[10px] font-semibold uppercase tracking-wider px-2 py-1">
@@ -72,6 +68,11 @@ export function ProductCard({ product, className }: ProductCardProps) {
           {product.category === 'print3d' && (
             <span className="bg-emerald-500 text-brand-950 text-[10px] font-semibold uppercase tracking-wider px-2 py-1">
               3D Lab
+            </span>
+          )}
+          {isMadeToOrder && (
+            <span className="bg-emerald-900 text-emerald-50 text-[10px] font-semibold uppercase tracking-wider px-2 py-1">
+              Made to order
             </span>
           )}
           {discount > 0 && (
@@ -89,14 +90,8 @@ export function ProductCard({ product, className }: ProductCardProps) {
               Only {product.stock} left
             </span>
           )}
-          {product.stock > 5 && product.stock <= 15 && (
-            <span className="bg-white/90 text-brand-800 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 shadow-sm">
-              {product.stock} in stock
-            </span>
-          )}
         </div>
 
-        {/* Wishlist + compare */}
         <div className="absolute top-3 right-3 flex flex-col gap-1.5">
           <button
             type="button"
@@ -134,7 +129,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </button>
         </div>
 
-        {/* Quick add (shows on hover) – for demo we just link to product */}
         <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <span className="flex h-9 w-full items-center justify-center rounded-md bg-white text-brand-900 text-sm font-medium shadow-md">
             <ShoppingBag className="h-4 w-4 mr-2" />
@@ -143,7 +137,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
         </div>
       </Link>
 
-      {/* Info */}
       <div className="mt-4 flex flex-col flex-1">
         <Link to={`/product/${product.slug}`} className="group/title">
           <h3 className="text-sm font-medium text-brand-900 group-hover/title:underline underline-offset-2">
@@ -168,7 +161,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
           )}
         </div>
 
-        {/* Rating */}
         <div className="mt-1.5 flex items-center gap-1 text-xs text-brand-500">
           <span className="text-amber-500">★</span>
           <span>{product.rating.toFixed(1)}</span>
@@ -184,7 +176,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
           }`}
         >
           {product.stock === 0
-            ? 'Out of stock'
+            ? isMadeToOrder
+              ? 'Made to order'
+              : 'Out of stock'
             : product.stock <= 5
               ? `Only ${product.stock} left`
               : `${product.stock} in stock`}
