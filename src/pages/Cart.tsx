@@ -4,6 +4,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
+import { FreeShippingBar, FREE_SHIPPING_THRESHOLD } from '../components/cart/FreeShippingBar';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 export function Cart() {
@@ -19,8 +20,8 @@ export function Cart() {
       return sum + unit * item.quantity;
     }, 0)
   );
-  const shipping = subtotal >= 100 ? 0 : 8;
-  const tax = subtotal * 0.08; // demo tax
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 8;
+  const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
   if (items.length === 0) {
@@ -42,8 +43,9 @@ export function Cart() {
       </h1>
 
       <div className="grid lg:grid-cols-3 gap-12">
-        {/* Items */}
         <div className="lg:col-span-2 space-y-6">
+          <FreeShippingBar subtotal={subtotal} className="mb-2" />
+
           {items.map((item) => (
             <div
               key={`${item.productId}-${item.colour}-${item.size}`}
@@ -135,10 +137,11 @@ export function Cart() {
           </button>
         </div>
 
-        {/* Summary */}
         <div className="lg:col-span-1">
           <div className="bg-brand-50 rounded-lg p-6 sticky top-24">
             <h2 className="text-lg font-semibold text-brand-950">Order Summary</h2>
+
+            <FreeShippingBar subtotal={subtotal} className="mt-4" />
 
             <dl className="mt-6 space-y-3 text-sm">
               <div className="flex justify-between">
