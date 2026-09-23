@@ -3,6 +3,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useSearchParams } from 'react-router-dom';
 import { useAdminStore } from '../store/adminStore';
 import { ProductGrid } from '../components/products/ProductGrid';
+import { ProductGridSkeleton } from '../components/common/Skeleton';
 import type { ProductCategory, SortOption } from '../types';
 
 const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -21,10 +22,18 @@ export function Shop() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [onSaleOnly, setOnSaleOnly] = useState(false);
   const [search, setSearch] = useState(searchParams.get('q') || '');
+  // Brief skeleton on first paint so the grid never “pops” in empty
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setSearch(searchParams.get('q') || '');
   }, [searchParams]);
+
+  useEffect(() => {
+    // Simulate hydration / filter apply — keeps UX smooth when products load
+    const t = window.setTimeout(() => setReady(true), 180);
+    return () => window.clearTimeout(t);
+  }, [products.length]);
 
   const category =
     (searchParams.get('category') as ProductCategory | 'all') || 'all';
@@ -153,11 +162,12 @@ export function Shop() {
           Shop
         </h1>
         <p className="mt-2 text-brand-500">
-          {filtered.length} product{filtered.length !== 1 ? 's' : ''}
+          {ready
+            ? `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`
+            : 'Loading products…'}
         </p>
       </div>
 
-      {/* Search + mobile filters toggle */}
       <div className="mb-8 flex flex-col sm:flex-row gap-3 sm:items-center">
         <input
           type="search"
@@ -177,7 +187,6 @@ export function Shop() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-10">
-        {/* Sidebar */}
         <aside
           className={`lg:w-56 shrink-0 space-y-8 ${
             filtersOpen ? 'block' : 'hidden lg:block'
@@ -310,7 +319,15 @@ export function Shop() {
         </aside>
 
         <div className="flex-1">
-          <ProductGrid products={filtered} />
+          {!ready ? (
+            <ProductGridSkeleton count={8} />
+          ) : filtered.length === 0 ? (
+            <p className="py-16 text-center text-brand-500">
+              No products match your filters. Try clearing search or size filters.
+            </p>
+          ) : (
+            <ProductGrid products={filtered} />
+          )}
         </div>
       </div>
     </div>
