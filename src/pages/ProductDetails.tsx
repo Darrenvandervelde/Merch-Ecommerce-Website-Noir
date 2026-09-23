@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useOpenGraph } from '../hooks/useOpenGraph';
 import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
@@ -13,9 +14,6 @@ import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
 import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
-//import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
-//import { BundleUpsell } from '../components/products/BundleUpsell';
-//import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
 
@@ -30,7 +28,6 @@ export function ProductDetails() {
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
   const [actionsVisible, setActionsVisible] = useState(true);
-  //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const actionsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -48,7 +45,20 @@ export function ProductDetails() {
     product?.description?.slice(0, 155)
   );
 
-  // Only update state when intersection actually changes (avoids redundant sets).
+  useOpenGraph({
+    title: product?.name ?? 'Product',
+    description: product?.description?.slice(0, 200),
+    image: product?.images[0],
+    type: 'product',
+    price: product ? (product.salePrice ?? product.price) : undefined,
+    currency: 'USD',
+    availability: product
+      ? product.stock > 0
+        ? 'in stock'
+        : 'out of stock'
+      : undefined,
+  });
+
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
   }, []);
@@ -241,7 +251,6 @@ export function ProductDetails() {
               ))}
             </div>
           </div>
-
 
           {isPrint && product.filaments && product.filaments.length > 0 && (
             <div className="mt-6">
