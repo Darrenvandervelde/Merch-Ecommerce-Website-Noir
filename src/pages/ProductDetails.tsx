@@ -17,7 +17,7 @@ import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
-import { ProductJsonLd } from '../components/products/ProductJsonLd';
+import { BundleBuilder } from '../components/products/BundleBuilder';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -47,20 +47,6 @@ export function ProductDetails() {
     product?.name ?? 'Product',
     product?.description?.slice(0, 155)
   );
-
-  useOpenGraph({
-    title: product?.name ?? 'Product',
-    description: product?.description?.slice(0, 200),
-    image: product?.images[0],
-    type: 'product',
-    price: product ? (product.salePrice ?? product.price) : undefined,
-    currency: 'USD',
-    availability: product
-      ? product.stock > 0
-        ? 'in stock'
-        : 'out of stock'
-      : undefined,
-  });
 
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
@@ -303,9 +289,16 @@ export function ProductDetails() {
               {isInWishlist ? 'In Wishlist' : 'Wishlist'}
             </Button>
           </div>
+
+          {(!colour || !size) && variantInStock && (
+            <p className="mt-3 text-sm text-brand-500">
+              Please select colour and size to add to cart.
+            </p>
+          )}
         </div>
       </div>
 
+      <BundleBuilder current={product} catalog={products} />
       <ShopTheLook current={product} products={products} />
       <RecentlyViewed excludeId={product.id} />
 
