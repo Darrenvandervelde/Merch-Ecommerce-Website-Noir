@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useWishlistStore } from '../store/wishlistStore';
 import { formatPrice } from '../utils/format';
-import { Button } from '../components/common/Button';
+import { EmptyState } from '../components/common/EmptyState';
 import { Heart } from 'lucide-react';
 
 export function Wishlist() {
@@ -10,16 +10,13 @@ export function Wishlist() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-24 text-center">
-        <Heart className="mx-auto h-12 w-12 text-brand-300" />
-        <h1 className="mt-4 text-2xl font-bold text-brand-950">
-          Your wishlist is empty
-        </h1>
-        <p className="mt-2 text-brand-500">Save items you love for later.</p>
-        <Button className="mt-8" onClick={() => (window.location.href = '/shop')}>
-          Browse products
-        </Button>
-      </div>
+      <EmptyState
+        icon={Heart}
+        title="Your wishlist is empty"
+        description="Save pieces you love while you browse. Tap the heart on any product to keep it here for later."
+        actionLabel="Discover products"
+        actionTo="/shop"
+      />
     );
   }
 
