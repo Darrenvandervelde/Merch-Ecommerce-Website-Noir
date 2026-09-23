@@ -13,11 +13,9 @@ import { RestockAlert } from '../components/products/RestockAlert';
 import { ShopTheLook } from '../components/products/ShopTheLook';
 import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
-//import { PrintSpecsPanel } from '../components/products/PrintSpecsPanel';
-//import { BundleUpsell } from '../components/products/BundleUpsell';
-//import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
+import { ProductImageGallery } from '../components/products/ProductImageGallery';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,7 +28,6 @@ export function ProductDetails() {
   const [qty, setQty] = useState(1);
   const [filamentHex, setFilamentHex] = useState('#1a1a1a');
   const [actionsVisible, setActionsVisible] = useState(true);
-  //const [tab, setTab] = useState<'details' | 'specs' | 'reviews'>('details');
 
   const actionsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -48,7 +45,6 @@ export function ProductDetails() {
     product?.description?.slice(0, 155)
   );
 
-  // Only update state when intersection actually changes (avoids redundant sets).
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
   }, []);
@@ -56,14 +52,12 @@ export function ProductDetails() {
   useEffect(() => {
     const el = actionsRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry) handleActionsIntersect(entry.isIntersecting);
       },
-      { threshold: 0.15, rootMargin: '0px' }
+      { threshold: 0.15 }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, [product?.id, handleActionsIntersect]);
@@ -85,7 +79,6 @@ export function ProductDetails() {
   const discount = product.salePrice
     ? getDiscountPercent(product.price, product.salePrice)
     : 0;
-
   const variantInStock = product.stock > 0;
 
   const handleAddToCart = () => {
@@ -127,40 +120,12 @@ export function ProductDetails() {
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
-            <ModelViewer product={product} filamentHex={filamentHex} />
+            <>
+              <ModelViewer product={product} filamentHex={filamentHex} />
+              <ProductImageGallery images={product.images} alt={product.name} />
+            </>
           ) : (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {isPrint && (
-            <div className="aspect-[3/4] bg-brand-100 overflow-hidden rounded-lg">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-3">
-              {product.images.map((img, i) => (
-                <div
-                  key={i}
-                  className="aspect-square bg-brand-100 overflow-hidden"
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
+            <ProductImageGallery images={product.images} alt={product.name} />
           )}
         </div>
 
@@ -178,14 +143,10 @@ export function ProductDetails() {
                 <span className="text-lg text-brand-400 line-through">
                   {formatPrice(product.price)}
                 </span>
-                <span className="text-sm font-medium text-red-600">
-                  -{discount}%
-                </span>
+                <span className="text-sm font-medium text-red-600">-{discount}%</span>
               </>
             ) : (
-              <span className="text-2xl font-semibold">
-                {formatPrice(product.price)}
-              </span>
+              <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
             )}
           </div>
 
@@ -194,9 +155,7 @@ export function ProductDetails() {
             {product.rating.toFixed(1)} ({product.reviewCount} reviews)
           </div>
 
-          <p className="mt-6 text-brand-600 leading-relaxed">
-            {product.description}
-          </p>
+          <p className="mt-6 text-brand-600 leading-relaxed">{product.description}</p>
 
           <div className="mt-8" ref={optionsRef}>
             <p className="text-sm font-medium text-brand-900 mb-3">
@@ -242,7 +201,6 @@ export function ProductDetails() {
             </div>
           </div>
 
-
           {isPrint && product.filaments && product.filaments.length > 0 && (
             <div className="mt-6">
               <FilamentPicker
@@ -285,9 +243,6 @@ export function ProductDetails() {
                 <Plus className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-2 text-xs text-brand-500">
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-            </p>
           </div>
 
           <RestockAlert
@@ -324,33 +279,10 @@ export function ProductDetails() {
             </Button>
             <Button size="lg" variant="outline" onClick={handleWishlist}>
               <Heart
-                className={`h-4 w-4 mr-2 ${
-                  isInWishlist ? 'fill-current text-red-500' : ''
-                }`}
+                className={`h-4 w-4 mr-2 ${isInWishlist ? 'fill-current text-red-500' : ''}`}
               />
               {isInWishlist ? 'In Wishlist' : 'Wishlist'}
             </Button>
-          </div>
-
-          {(!colour || !size) && variantInStock && (
-            <p className="mt-3 text-sm text-brand-500">
-              Please select colour and size to add to cart.
-            </p>
-          )}
-
-          <div className="mt-10 pt-8 border-t border-brand-200 space-y-3 text-sm text-brand-600">
-            <p>
-              <strong className="text-brand-900">Shipping:</strong> Free on
-              orders over $100. 3–7 business days.
-            </p>
-            <p>
-              <strong className="text-brand-900">Returns:</strong> 30-day easy
-              returns. Free return shipping.
-            </p>
-            <p>
-              <strong className="text-brand-900">Care:</strong> Machine wash
-              cold, inside out. Hang dry or tumble low. Avoid bleach.
-            </p>
           </div>
         </div>
       </div>
