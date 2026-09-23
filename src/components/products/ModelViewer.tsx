@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Product } from '../../types';
 
 interface ModelViewerProps {
@@ -6,13 +6,16 @@ interface ModelViewerProps {
   filamentHex?: string;
 }
 
+type ViewerStatus = 'loading' | 'ready' | 'fallback';
+
 /**
- * Lightweight procedural 3D preview (no extra npm deps required).
- * Uses Canvas WebGL via dynamic three import when available;
- * falls back to CSS 3D-style placeholder if three is not installed.
+ * Lightweight procedural 3D preview (dynamic three import).
+ * Shows a skeleton while three.js boots, then the live mesh.
+ * Falls back to a clear message if three is not installed.
  */
 export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerProps) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<ViewerStatus>('loading');
 
   useEffect(() => {
     const el = mountRef.current;
@@ -20,6 +23,7 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
 
     let cleanup: (() => void) | undefined;
     let cancelled = false;
+    setStatus('loading');
 
     (async () => {
       try {
@@ -114,6 +118,18 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
           camera.position.multiplyScalar(e.deltaY > 0 ? 1.06 : 0.94);
         };
 
+        // Resize observer so the canvas stays sharp on layout changes
+        const resizeObserver = new ResizeObserver(() => {
+          if (!mountRef.current) return;
+          const w = mountRef.current.clientWidth;
+          const h = mountRef.current.clientHeight;
+          if (w < 1 || h < 1) return;
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        });
+        resizeObserver.observe(el);
+
         el.addEventListener('pointerdown', onDown);
         el.addEventListener('pointerup', onUp);
         el.addEventListener('pointermove', onMove);
@@ -129,8 +145,11 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
         };
         animate();
 
+        if (!cancelled) setStatus('ready');
+
         cleanup = () => {
           cancelAnimationFrame(frame);
+          resizeObserver.disconnect();
           el.removeEventListener('pointerdown', onDown);
           el.removeEventListener('pointerup', onUp);
           el.removeEventListener('pointermove', onMove);
@@ -141,7 +160,8 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
           el.innerHTML = '';
         };
       } catch {
-        // three not installed — static fallback
+        if (cancelled) return;
+        setStatus('fallback');
         if (el) {
           el.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#0a0a0c;color:#34d399;font-size:13px;padding:1rem;text-align:center">
             3D preview needs <code style="margin:0 4px">three</code> package.<br/>Run: npm install three @types/three
@@ -158,14 +178,32 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
 
   return (
     <div className="relative">
+      {/* Loading skeleton overlay — sits above the mount until three is ready */}
+      {status === 'loading' && (
+        <div
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg border border-emerald-500/20 bg-brand-950"
+          aria-busy="true"
+          aria-label="Loading 3D preview"
+        >
+          <div className="h-16 w-16 animate-pulse rounded-full bg-emerald-500/20" />
+          <div className="mt-4 h-3 w-32 animate-pulse rounded bg-brand-800" />
+          <p className="mt-3 text-xs text-emerald-400/80">Loading 3D preview…</p>
+        </div>
+      )}
+
       <div
         ref={mountRef}
         className="aspect-square w-full rounded-lg overflow-hidden border border-emerald-500/20 bg-brand-950 cursor-grab active:cursor-grabbing"
         role="img"
         aria-label={`3D preview of ${product.name}`}
       />
+
       <p className="mt-2 text-xs text-brand-500 text-center">
-        Drag to rotate · scroll to zoom · colour updates with filament
+        {status === 'ready'
+          ? 'Drag to rotate · scroll to zoom · colour updates with filament'
+          : status === 'loading'
+            ? 'Preparing interactive preview…'
+            : 'Install three.js for the live 3D preview'}
       </p>
     </div>
   );

@@ -31,13 +31,34 @@ export function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold text-brand-950">Your cart is empty</h1>
-        <p className="mt-3 text-brand-500">Looks like you haven’t added anything yet.</p>
-        <Button className="mt-8" onClick={() => (window.location.href = '/shop')}>
-          Continue Shopping
-        </Button>
-      </div>
+      <EmptyState
+        icon={ShoppingBag}
+        title="Your cart is empty"
+        description="Looks like you haven’t added anything yet. Explore streetwear essentials and 3D Lab prints — free shipping over $100."
+        actionLabel="Shop the collection"
+        actionTo="/shop"
+      >
+        <div className="mt-6 flex flex-wrap justify-center gap-2 text-xs">
+          <Link
+            to="/shop?category=tshirt"
+            className="rounded-full border border-brand-200 px-3 py-1.5 text-brand-600 hover:border-brand-400"
+          >
+            T-Shirts
+          </Link>
+          <Link
+            to="/shop?category=hoodie"
+            className="rounded-full border border-brand-200 px-3 py-1.5 text-brand-600 hover:border-brand-400"
+          >
+            Hoodies
+          </Link>
+          <Link
+            to="/shop?category=print3d"
+            className="rounded-full border border-brand-200 px-3 py-1.5 text-brand-600 hover:border-brand-400"
+          >
+            3D Lab
+          </Link>
+        </div>
+      </EmptyState>
     );
   }
 
@@ -49,6 +70,8 @@ export function Cart() {
 
       <div className="grid lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-6">
+          <FreeShippingBar subtotal={subtotal} className="mb-2" />
+
           {items.map((item) => (
             <div
               key={`${item.productId}-${item.colour}-${item.size}`}
