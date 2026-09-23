@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Custom design tokens for premium streetwear aesthetic */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -21,7 +20,6 @@
   --color-accent-hover: #000000;
 }
 
-/* Base styles */
 html {
   scroll-behavior: smooth;
 }
@@ -32,23 +30,36 @@ body {
   margin: 0;
 }
 
-/* Focus styles for accessibility */
+/* Dark mode — class on <html> from themeStore */
+html.dark body {
+  @apply bg-brand-950 text-brand-100;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-brand-900;
 }
 
-/* Smooth image loading */
+html.dark :focus-visible {
+  @apply outline-brand-200;
+}
+
 img {
   @apply max-w-full h-auto;
 }
 
-/* Custom scrollbar (subtle) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
   @apply bg-brand-100;
+}
+html.dark ::-webkit-scrollbar-track {
+  @apply bg-brand-800;
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-brand-400 rounded-full;
