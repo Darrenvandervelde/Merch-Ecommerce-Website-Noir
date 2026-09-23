@@ -7,6 +7,7 @@ import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
+import { useRecentlyViewedStore } from '../store/recentlyViewedStore';
 import { formatPrice, getDiscountPercent } from '../utils/format';
 import { Button } from '../components/common/Button';
 import { SizeGuidePanel } from '../components/products/SizeGuide';
@@ -40,6 +41,7 @@ export function ProductDetails() {
     product ? s.isInWishlist(product.id) : false
   );
   const addToast = useToastStore((s) => s.addToast);
+  const trackView = useRecentlyViewedStore((s) => s.track);
 
   useDocumentTitle(
     product?.name ?? 'Product',
@@ -305,6 +307,7 @@ export function ProductDetails() {
       </div>
 
       <ShopTheLook current={product} products={products} />
+      <RecentlyViewed excludeId={product.id} />
 
       <StickyAddToCart
         product={product}
