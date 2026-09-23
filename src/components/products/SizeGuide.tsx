@@ -14,8 +14,10 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
   const [open, setOpen] = useState(false);
   const guide = sizeGuides[category];
   const vote = useFitVoteStore((s) => s.vote);
-  const stats = useFitVoteStore((s) => s.votes[productId] ?? { small: 0, true: 0, large: 0 });
-  const userVote = useFitVoteStore((s) => s.userVotes[productId] ?? null);
+  // Use stable store helpers — never return a fresh object literal from a
+  // selector or React 18 useSyncExternalStore will loop (error #185).
+  const stats = useFitVoteStore((s) => s.getStats(productId));
+  const userVote = useFitVoteStore((s) => s.getUserVote(productId));
 
   const total = stats.small + stats.true + stats.large;
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
