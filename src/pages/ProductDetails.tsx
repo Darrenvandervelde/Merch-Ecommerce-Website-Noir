@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useAdminStore } from '../store/adminStore';
@@ -48,18 +48,25 @@ export function ProductDetails() {
     product?.description?.slice(0, 155)
   );
 
+  // Only update state when intersection actually changes (avoids redundant sets).
+  const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
+    setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
+  }, []);
+
   useEffect(() => {
     const el = actionsRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setActionsVisible(entry.isIntersecting),
+      ([entry]) => {
+        if (entry) handleActionsIntersect(entry.isIntersecting);
+      },
       { threshold: 0.15, rootMargin: '0px' }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [product?.id]);
+  }, [product?.id, handleActionsIntersect]);
 
   if (!product) {
     return (
