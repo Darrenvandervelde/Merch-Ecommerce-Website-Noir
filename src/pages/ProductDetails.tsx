@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useOpenGraph } from '../hooks/useOpenGraph';
 import { useAdminStore } from '../store/adminStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
@@ -15,7 +16,7 @@ import { ModelViewer } from '../components/products/ModelViewer';
 import { FilamentPicker } from '../components/products/FilamentPicker';
 import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
-import { ProductImageGallery } from '../components/products/ProductImageGallery';
+import { ProductJsonLd } from '../components/products/ProductJsonLd';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -44,6 +45,20 @@ export function ProductDetails() {
     product?.name ?? 'Product',
     product?.description?.slice(0, 155)
   );
+
+  useOpenGraph({
+    title: product?.name ?? 'Product',
+    description: product?.description?.slice(0, 200),
+    image: product?.images[0],
+    type: 'product',
+    price: product ? (product.salePrice ?? product.price) : undefined,
+    currency: 'USD',
+    availability: product
+      ? product.stock > 0
+        ? 'in stock'
+        : 'out of stock'
+      : undefined,
+  });
 
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
@@ -117,6 +132,8 @@ export function ProductDetails() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 pb-28 lg:pb-10">
+      <ProductJsonLd product={product} />
+
       <div className="grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           {isPrint ? (
