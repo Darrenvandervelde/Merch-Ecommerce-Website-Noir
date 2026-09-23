@@ -14,8 +14,6 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
   const [open, setOpen] = useState(false);
   const guide = sizeGuides[category];
   const vote = useFitVoteStore((s) => s.vote);
-  // Use stable store helpers — never return a fresh object literal from a
-  // selector or React 18 useSyncExternalStore will loop (error #185).
   const stats = useFitVoteStore((s) => s.getStats(productId));
   const userVote = useFitVoteStore((s) => s.getUserVote(productId));
 
@@ -62,7 +60,9 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
           ))}
         </div>
         {total > 0 && (
-          <p className="mt-2 text-xs text-brand-400">{total} customer vote{total !== 1 ? 's' : ''}</p>
+          <p className="mt-2 text-xs text-brand-400">
+            {total} customer vote{total !== 1 ? 's' : ''}
+          </p>
         )}
       </div>
 
@@ -76,11 +76,20 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
           <div
             className="relative bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6"
             role="dialog"
+            aria-modal="true"
             aria-labelledby="size-guide-title"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 id="size-guide-title" className="text-lg font-semibold text-brand-950">
-                Size guide — {category === 'tshirt' ? 'T-Shirts' : 'Hoodies'}
+              <h2
+                id="size-guide-title"
+                className="text-lg font-semibold text-brand-950"
+              >
+                Size guide —{' '}
+                {category === 'tshirt'
+                  ? 'T-Shirts'
+                  : category === 'hoodie'
+                    ? 'Hoodies'
+                    : '3D Lab'}
               </h2>
               <button
                 type="button"
@@ -91,7 +100,30 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-sm text-brand-600 mb-4">{guide.fitNote}</p>
+
+            {guide.mediaUrl && (
+              <img
+                src={guide.mediaUrl}
+                alt="How this garment is measured"
+                className="mb-4 w-full h-40 object-cover rounded-lg bg-brand-100"
+              />
+            )}
+
+            <p className="text-sm text-brand-600 mb-3">{guide.fitNote}</p>
+
+            {guide.measureTips?.length > 0 && (
+              <div className="mb-4 rounded-md bg-brand-50 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700 mb-2">
+                  How to measure
+                </p>
+                <ul className="list-disc pl-4 space-y-1 text-xs text-brand-600">
+                  {guide.measureTips.map((tip) => (
+                    <li key={tip}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
                 <thead>
@@ -105,17 +137,22 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
                 <tbody>
                   {guide.rows.map((row) => (
                     <tr key={row.size} className="border-b border-brand-100">
-                      <td className="py-2.5 pr-4 font-medium text-brand-900">{row.size}</td>
+                      <td className="py-2.5 pr-4 font-medium text-brand-900">
+                        {row.size}
+                      </td>
                       <td className="py-2.5 pr-4 text-brand-600">{row.chest}</td>
                       <td className="py-2.5 pr-4 text-brand-600">{row.length}</td>
-                      <td className="py-2.5 text-brand-600">{row.sleeve ?? '—'}</td>
+                      <td className="py-2.5 text-brand-600">
+                        {row.sleeve ?? '—'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <p className="mt-4 text-xs text-brand-400">
-              Measurements are approximate. For the best fit, compare to a garment you already own.
+              Measurements are approximate. For the best fit, compare to a
+              garment you already own.
             </p>
           </div>
         </div>
