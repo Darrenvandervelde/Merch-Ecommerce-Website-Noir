@@ -10,6 +10,7 @@ const ProductDetails = lazy(() => import('../pages/ProductDetails').then((m) => 
 const Cart = lazy(() => import('../pages/Cart').then((m) => ({ default: m.Cart })));
 const Checkout = lazy(() => import('../pages/Checkout').then((m) => ({ default: m.Checkout })));
 const OrderConfirmation = lazy(() => import('../pages/OrderConfirmation').then((m) => ({ default: m.OrderConfirmation })));
+const OrderTracking = lazy(() => import('../pages/OrderTracking').then((m) => ({ default: m.OrderTracking })));
 const About = lazy(() => import('../pages/About').then((m) => ({ default: m.About })));
 const Contact = lazy(() => import('../pages/Contact').then((m) => ({ default: m.Contact })));
 const FAQ = lazy(() => import('../pages/FAQ').then((m) => ({ default: m.FAQ })));
@@ -27,10 +28,11 @@ const AdminDashboard = lazy(() => import('../pages/admin/Dashboard').then((m) =>
 const AdminProducts = lazy(() => import('../pages/admin/Products').then((m) => ({ default: m.AdminProducts })));
 const AdminOrders = lazy(() => import('../pages/admin/Orders').then((m) => ({ default: m.AdminOrders })));
 const AdminPayments = lazy(() => import('../pages/admin/Payments').then((m) => ({ default: m.AdminPayments })));
+const AdminStockSync = lazy(() => import('../pages/admin/StockSync').then((m) => ({ default: m.AdminStockSync })));
 
 function PageLoader() {
   return (
-    <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="flex items-center justify-center min-h-[50vh]" role="status" aria-label="Loading">
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-300 border-t-brand-900" />
     </div>
   );
@@ -57,6 +59,8 @@ export const router = createBrowserRouter([
       { path: 'cart', element: withSuspense(<Cart />) },
       { path: 'checkout', element: withSuspense(<Checkout />) },
       { path: 'order-confirmation/:orderId', element: withSuspense(<OrderConfirmation />) },
+      { path: 'track', element: withSuspense(<OrderTracking />) },
+      { path: 'track/:orderId', element: withSuspense(<OrderTracking />) },
       { path: 'about', element: withSuspense(<About />) },
       { path: 'contact', element: withSuspense(<Contact />) },
       { path: 'faq', element: withSuspense(<FAQ />) },
@@ -79,6 +83,7 @@ export const router = createBrowserRouter([
       { path: 'products', element: withAdmin(<AdminProducts />) },
       { path: 'orders', element: withAdmin(<AdminOrders />) },
       { path: 'payments', element: withAdmin(<AdminPayments />) },
+      { path: 'stock', element: withAdmin(<AdminStockSync />) },
     ],
   },
 ]);
