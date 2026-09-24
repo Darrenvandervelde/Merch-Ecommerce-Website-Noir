@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Custom design tokens for premium streetwear aesthetic */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -21,7 +20,6 @@
   --color-accent-hover: #000000;
 }
 
-/* Base styles */
 html {
   scroll-behavior: smooth;
 }
@@ -32,17 +30,34 @@ body {
   margin: 0;
 }
 
-/* Focus styles for accessibility */
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-brand-900;
 }
 
-/* Smooth image loading */
+/* Ensure interactive elements have minimum touch target where reasonable */
+button:not([class*="h-"]),
+a.inline-flex {
+  min-height: 2rem;
+}
+
 img {
   @apply max-w-full h-auto;
 }
 
-/* Custom scrollbar (subtle) */
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -55,4 +70,27 @@ img {
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-brand-500;
+}
+
+/* Screen-reader only utility if Tailwind does not include it */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
 }
