@@ -1,6 +1,6 @@
 import type { PhotoReview } from '../types';
 
-/** Curated photo reviews for 3D Lab + apparel (JSON-friendly data). */
+/** Curated photo reviews for 3D Lab + apparel (aligned with catalogue imagery). */
 export const photoReviews: PhotoReview[] = [
   {
     id: 'r1',
@@ -12,7 +12,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-08-12',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&q=80',
+      'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=85',
   },
   {
     id: 'r2',
@@ -24,7 +24,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-07-28',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&q=80',
+      'https://images.unsplash.com/photo-1485955900006-10f4d32477dc?auto=format&fit=crop&w=600&q=85',
   },
   {
     id: 'r3',
@@ -36,7 +36,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-09-01',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=85',
   },
   {
     id: 'r4',
@@ -48,7 +48,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-08-20',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&q=80',
+      'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=85',
   },
   {
     id: 'r5',
@@ -60,7 +60,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-09-05',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=600&q=85',
   },
   {
     id: 'r6',
@@ -72,7 +72,7 @@ export const photoReviews: PhotoReview[] = [
     date: '2026-08-30',
     verified: true,
     photoUrl:
-      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=85',
   },
 ];
 
