@@ -32,20 +32,19 @@ interface AdminState {
   orders: AdminOrder[];
   lowStockThreshold: number;
   setLowStockThreshold: (n: number) => void;
-  // Product actions
   updateProductPrice: (id: string, price: number, salePrice?: number | null) => void;
   updateProductStock: (id: string, stock: number) => void;
   toggleProductFlag: (
     id: string,
     flag: 'featured' | 'bestseller' | 'newArrival'
   ) => void;
-  // Order actions
+  addProduct: (product: Product) => void;
+  removeProduct: (id: string) => void;
   updateOrderStatus: (id: string, status: OrderStatus) => void;
   updatePaymentStatus: (
     id: string,
     paymentStatus: AdminOrder['paymentStatus']
   ) => void;
-  // Stats helpers
   getStats: () => {
     totalProducts: number;
     totalOrders: number;
@@ -55,7 +54,6 @@ interface AdminState {
   };
 }
 
-// Seed a few realistic mock orders
 const seedOrders: AdminOrder[] = [
   {
     id: 'ord-001',
@@ -251,6 +249,18 @@ export const useAdminStore = create<AdminState>()(
         }));
       },
 
+      addProduct: (product) => {
+        set((state) => ({
+          products: [product, ...state.products.filter((p) => p.id !== product.id)],
+        }));
+      },
+
+      removeProduct: (id) => {
+        set((state) => ({
+          products: state.products.filter((p) => p.id !== id),
+        }));
+      },
+
       updateOrderStatus: (id, status) => {
         set((state) => ({
           orders: state.orders.map((o) =>
@@ -277,12 +287,13 @@ export const useAdminStore = create<AdminState>()(
           pendingOrders: orders.filter(
             (o) => o.status === 'pending' || o.status === 'processing'
           ).length,
-          lowStock: products.filter((p) => p.stock < get().lowStockThreshold).length,
+          lowStock: products.filter((p) => p.stock < get().lowStockThreshold)
+            .length,
         };
       },
     }),
     {
-      name: 'noir-admin-v3',
+      name: 'noir-admin-v4',
       partialize: (state) => ({
         products: state.products,
         orders: state.orders,
