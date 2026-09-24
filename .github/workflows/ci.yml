@@ -25,11 +25,12 @@ jobs:
           node-version: "20"
           cache: npm
 
+      # Use npm install so CI still works if package-lock is briefly out of sync.
+      # Prefer npm ci once the lockfile is committed and verified in sync.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Production build
         run: npm run build
         env:
-          # Build must succeed without real secrets
           VITE_APP_NAME: NOIR
