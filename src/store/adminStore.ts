@@ -45,6 +45,8 @@ interface AdminState {
     id: string,
     paymentStatus: AdminOrder['paymentStatus']
   ) => void;
+  /** Pull latest images/copy from the seed catalogue for known product IDs */
+  resyncCatalogueImages: () => void;
   getStats: () => {
     totalProducts: number;
     totalOrders: number;
@@ -52,6 +54,30 @@ interface AdminState {
     pendingOrders: number;
     lowStock: number;
   };
+}
+
+/** Merge seed catalogue images onto persisted products so storefront photos stay current. */
+function mergeSeedImages(persisted: Product[]): Product[] {
+  const seedById = new Map(initialProducts.map((p) => [p.id, p]));
+  const merged = persisted.map((p) => {
+    const seed = seedById.get(p.id);
+    if (!seed) return p;
+    return {
+      ...p,
+      images: seed.images,
+      name: seed.name,
+      description: seed.description,
+      slug: seed.slug,
+    };
+  });
+  // Ensure any new seed products appear even if localStorage was older
+  const existingIds = new Set(merged.map((p) => p.id));
+  for (const seed of initialProducts) {
+    if (!existingIds.has(seed.id)) {
+      merged.push(structuredClone(seed));
+    }
+  }
+  return merged;
 }
 
 const seedOrders: AdminOrder[] = [
@@ -64,7 +90,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-001',
         name: 'Premium Black Hoodie',
         slug: 'premium-black-hoodie',
-        image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200',
+        image: pexelsThumb(1183266),
         price: 98,
         colour: 'Black',
         size: 'L',
@@ -99,7 +125,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'ts-002',
         name: 'Classic White Tee',
         slug: 'classic-white-tee',
-        image: 'https://images.unsplash.com/photo-1523381210783-3a18c4f1d2a3?w=200',
+        image: pexelsThumb(6311392),
         price: 36,
         salePrice: 28,
         colour: 'White',
@@ -135,7 +161,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-002',
         name: 'Oversized Essential Hoodie',
         slug: 'oversized-essential-hoodie',
-        image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=200',
+        image: pexelsThumb(7671185),
         price: 88,
         salePrice: 72,
         colour: 'Heather Grey',
@@ -147,7 +173,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'ts-001',
         name: 'Essential Black Tee',
         slug: 'essential-black-tee',
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200',
+        image: pexelsThumb(955859),
         price: 38,
         colour: 'Black',
         size: 'L',
@@ -182,7 +208,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-005',
         name: 'Heavyweight Logo Hoodie',
         slug: 'heavyweight-logo-hoodie',
-        image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=200',
+        image: pexelsThumb(3755706),
         price: 105,
         colour: 'Black',
         size: 'M',
@@ -209,6 +235,10 @@ const seedOrders: AdminOrder[] = [
     estimatedDelivery: '2026-09-03',
   },
 ];
+
+function pexelsThumb(id: number) {
+  return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=200`;
+}
 
 export const useAdminStore = create<AdminState>()(
   persist(
@@ -277,6 +307,12 @@ export const useAdminStore = create<AdminState>()(
         }));
       },
 
+      resyncCatalogueImages: () => {
+        set((state) => ({
+          products: mergeSeedImages(state.products),
+        }));
+      },
+
       getStats: () => {
         const { products, orders } = get();
         const paidOrders = orders.filter((o) => o.paymentStatus === 'paid');
@@ -293,12 +329,24 @@ export const useAdminStore = create<AdminState>()(
       },
     }),
     {
-      name: 'noir-admin-v4',
+      // Bump version so browsers drop stale product images from older seeds
+      name: 'noir-admin-v5',
       partialize: (state) => ({
         products: state.products,
         orders: state.orders,
         lowStockThreshold: state.lowStockThreshold,
       }),
+      merge: (persistedState, currentState) => {
+        const p = (persistedState ?? {}) as Partial<AdminState>;
+        const products = mergeSeedImages(
+          p.products?.length ? p.products : currentState.products
+        );
+        return {
+          ...currentState,
+          ...p,
+          products,
+        };
+      },
     }
   )
 );
