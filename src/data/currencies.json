@@ -1,0 +1,13 @@
+{
+  "base": "USD",
+  "rates": {
+    "USD": 1,
+    "ZAR": 18.45,
+    "EUR": 0.92
+  },
+  "labels": {
+    "USD": "US Dollar",
+    "ZAR": "South African Rand",
+    "EUR": "Euro"
+  }
+}
