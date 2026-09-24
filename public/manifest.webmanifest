@@ -1,0 +1,18 @@
+{
+  "name": "NOIR Merch Store",
+  "short_name": "NOIR",
+  "description": "Premium streetwear and 3D printed objects",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#18181b",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
