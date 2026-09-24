@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
+import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 import { usePromoStore } from '../store/promoStore';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useToastStore } from '../store/toastStore';
 import { formatPrice } from '../utils/format';
 import { Button } from '../components/common/Button';
+import { EmptyState } from '../components/common/EmptyState';
 import { PromoCodeInput } from '../components/cart/PromoCodeInput';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { FreeShippingBar } from '../components/cart/FreeShippingBar';
 
 export function Cart() {
   useDocumentTitle('Cart');
