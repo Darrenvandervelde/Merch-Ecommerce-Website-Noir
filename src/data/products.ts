@@ -20,9 +20,9 @@ export const products: Product[] = [
       'Our signature heavyweight cotton tee. Soft hand-feel, reinforced seams, and a relaxed streetwear fit. Perfect everyday essential that only gets better with wear.',
     price: 38,
     images: [
-      img('photo-1618354691373-d851c5c3a990'), // black tee front
-      img('photo-1583743814966-8936f5b7be1a'), // black tee detail
-      img('photo-1503342217505-b0a15ec3261c'), // worn black tee
+      img('photo-1618354691373-d851c5c3a990'),
+      img('photo-1583743814966-8936f5b7be1a'),
+      img('photo-1503342217505-b0a15ec3261c'),
     ],
     colours: ['Black', 'White', 'Charcoal'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
@@ -43,9 +43,9 @@ export const products: Product[] = [
     price: 36,
     salePrice: 28,
     images: [
-      img('photo-1521572163474-6864f9cf17ab'), // white tee classic
-      img('photo-1562157873-818bc0726f68'), // folded whites
-      img('photo-1622445275463-afa2ab738c34'), // clean white tee on hanger vibe
+      img('photo-1521572163474-6864f9cf17ab'),
+      img('photo-1562157873-818bc0726f68'),
+      img('photo-1622445275463-afa2ab738c34'),
     ],
     colours: ['White', 'Off-White'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -65,9 +65,9 @@ export const products: Product[] = [
       'Heavy 240gsm cotton with a large back print inspired by neon nights. Drop shoulders and extended length for that true oversized silhouette.',
     price: 48,
     images: [
-      img('photo-1576566588028-4147f3842f27'), // graphic print tee
-      img('photo-1503341504253-dff4815485f1'), // print detail
-      img('photo-1554568218-0f1715e72254'), // street graphic style
+      img('photo-1576566588028-4147f3842f27'),
+      img('photo-1503341504253-dff4815485f1'),
+      img('photo-1554568218-0f1715e72254'),
     ],
     colours: ['Black', 'Navy'],
     sizes: ['M', 'L', 'XL', 'XXL'],
@@ -87,9 +87,9 @@ export const products: Product[] = [
       'Enzyme-washed for a lived-in feel from day one. Soft faded colour and subtle texture. A modern take on the classic vintage tee.',
     price: 42,
     images: [
-      img('photo-1586790170083-2f9ceadc732d'), // washed tee
-      img('photo-1622445275576-721789743ea7'), // soft washed cotton
-      img('photo-1489987707025-afc232f7ea0f'), // casual washed apparel
+      img('photo-1586790170083-2f9ceadc732d'),
+      img('photo-1489987707025-afc232f7ea0f'),
+      img('photo-1529374255404-311a2a4f1fd9'),
     ],
     colours: ['Stone', 'Sage', 'Washed Black'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -109,9 +109,9 @@ export const products: Product[] = [
       'Extended length with a single chest pocket. Clean lines, premium cotton, and a slightly structured fit that works under jackets or alone.',
     price: 44,
     images: [
-      img('photo-1596755094514-f87e34085b2c'), // pocket / structured tee
-      img('photo-1529374255404-311a2a4f1fd9'), // casual tee stack
-      img('photo-1602810318383-e386cc2a3ccf'), // menswear tee
+      img('photo-1596755094514-f87e34085b2c'),
+      img('photo-1529374255404-311a2a4f1fd9'),
+      img('photo-1602810318383-e386cc2a3ccf'),
     ],
     colours: ['Black', 'Olive', 'Cream'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -132,9 +132,9 @@ export const products: Product[] = [
     price: 40,
     salePrice: 32,
     images: [
-      img('photo-1564584217132-2271feaeb3c5'), // striped tee
-      img('photo-1434389677669-e08b4cac3105'), // stripe detail apparel
-      img('photo-1622470953794-aa9c70b0fb9d'), // casual stripe
+      img('photo-1564584217132-2271feaeb3c5'),
+      img('photo-1434389677669-e08b4cac3105'),
+      img('photo-1622470953794-aa9c70b0fb9d'),
     ],
     colours: ['Navy/White', 'Black/White'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
@@ -154,9 +154,9 @@ export const products: Product[] = [
       'Our bold logo printed on ultra-heavy 280gsm cotton. Structured shoulders and a boxy cut that holds its shape wash after wash.',
     price: 52,
     images: [
-      img('photo-1571945159080-59ec43a9a3ae'), // logo / branded tee
-      img('photo-1583743814966-8936f5b7be1a'), // heavy black tee
-      img('photo-1618354691438-25bc045586c3'), // premium tee product
+      img('photo-1571945159080-59ec43a9a3ae'),
+      img('photo-1583743814966-8936f5b7be1a'),
+      img('photo-1618354691438-25bc045586c3'),
     ],
     colours: ['Black', 'White', 'Forest'],
     sizes: ['M', 'L', 'XL', 'XXL'],
@@ -176,9 +176,9 @@ export const products: Product[] = [
       'Soft garment-dyed cotton in a warm sand tone. Relaxed through the body with a slightly curved hem. Effortless summer staple.',
     price: 39,
     images: [
-      img('photo-1715289913000-3c5d4f0a8f1c'), // fallback sand-ish
-      img('photo-1622445275463-afa2ab738c34'), // light neutral tee
-      img('photo-1523381210783-3a18c4f1d2a3'), // soft neutral apparel
+      img('photo-1523381210783-3a18c4f1d2a3'),
+      img('photo-1622445275463-afa2ab738c34'),
+      img('photo-1562157873-818bc0726f68'),
     ],
     colours: ['Sand', 'Clay', 'Dust'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -200,9 +200,9 @@ export const products: Product[] = [
       'Our flagship heavyweight hoodie. 400gsm French terry, brushed interior, double-layered hood, and metal aglets. Built for cold days and late nights.',
     price: 98,
     images: [
-      img('photo-1556821840-3a63f95609a7'), // black hoodie classic
-      img('photo-1578768079052-aa76e52b5d8d'), // hoodie detail
-      img('photo-1620799228270-05c4f5c1f0f4'), // dark hoodie lifestyle
+      img('photo-1556821840-3a63f95609a7'),
+      img('photo-1578768079052-aa76e52b5d8d'),
+      img('photo-1503342217505-b0a15ec3261c'),
     ],
     colours: ['Black', 'Charcoal'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
@@ -223,9 +223,9 @@ export const products: Product[] = [
     price: 88,
     salePrice: 72,
     images: [
-      img('photo-1620799140408-edc6dcb6d633'), // grey/oversized hoodie
-      img('photo-1515886657613-9f3515b0c78f'), // fashion hoodie look
-      img('photo-1578587018452-892b622ab76e'), // soft fleece hoodie
+      img('photo-1620799140408-edc6dcb6d633'),
+      img('photo-1515886657613-9f3515b0c78f'),
+      img('photo-1578587018452-892b622ab76e'),
     ],
     colours: ['Heather Grey', 'Black', 'Navy'],
     sizes: ['M', 'L', 'XL', 'XXL'],
@@ -245,9 +245,9 @@ export const products: Product[] = [
       'Full-zip design with technical stretch fabric. Water-resistant finish, hidden zip pockets, and a modern athletic silhouette.',
     price: 110,
     images: [
-      img('photo-1591047139829-d91aecb6caea'), // zip / jacket style
-      img('photo-1544966503-7cc5ac882d5f'), // technical outerwear
-      img('photo-1556821840-3a63f95609a7'), // dark hoodie alt
+      img('photo-1591047139829-d91aecb6caea'),
+      img('photo-1544966503-7cc5ac882d5f'),
+      img('photo-1556821840-3a63f95609a7'),
     ],
     colours: ['Black', 'Olive', 'Slate'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -267,9 +267,9 @@ export const products: Product[] = [
       'Garment-dyed and washed for a soft, lived-in look. Slightly cropped body and wide sleeves. The kind of hoodie that feels like an old favourite from day one.',
     price: 92,
     images: [
-      img('photo-1578768079052-aa76e52b5d8d'), // washed hoodie
-      img('photo-1503342217505-b0a15ec3261c'), // faded streetwear
-      img('photo-1556821840-3a63f95609a7'), // black hoodie base
+      img('photo-1578768079052-aa76e52b5d8d'),
+      img('photo-1503342217505-b0a15ec3261c'),
+      img('photo-1556821840-3a63f95609a7'),
     ],
     colours: ['Faded Black', 'Washed Navy', 'Stone'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -289,9 +289,9 @@ export const products: Product[] = [
       'Bold embroidered logo on our densest French terry. Structured hood, ribbed cuffs and hem, and a fit that stays true after countless washes.',
     price: 105,
     images: [
-      img('photo-1620799142184-8e1a2e3f0f5e'), // hoodie product
-      img('photo-1620799140408-edc6dcb6d633'), // essential hoodie
-      img('photo-1556821840-3a63f95609a7'), // black premium
+      img('photo-1556821840-3a63f95609a7'),
+      img('photo-1620799140408-edc6dcb6d633'),
+      img('photo-1578768079052-aa76e52b5d8d'),
     ],
     colours: ['Black', 'White', 'Forest Green'],
     sizes: ['M', 'L', 'XL', 'XXL'],
@@ -312,9 +312,9 @@ export const products: Product[] = [
     price: 86,
     salePrice: 69,
     images: [
-      img('photo-1515886657613-9f3515b0c78f'), // fashion cropped silhouette
-      img('photo-1578587018452-892b622ab76e'), // soft hoodie
-      img('photo-1620799140408-edc6dcb6d633'), // light hoodie
+      img('photo-1515886657613-9f3515b0c78f'),
+      img('photo-1578587018452-892b622ab76e'),
+      img('photo-1620799140408-edc6dcb6d633'),
     ],
     colours: ['Black', 'Cream', 'Sage'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -334,9 +334,9 @@ export const products: Product[] = [
       'Ultimate cold-weather piece. Thick outer shell with full sherpa lining, oversized hood, and reinforced stitching throughout.',
     price: 128,
     images: [
-      img('photo-1544966503-7cc5ac882d5f'), // warm outerwear
-      img('photo-1591047139829-d91aecb6caea'), // structured warm layer
-      img('photo-1578768079052-aa76e52b5d8d'), // hoodie detail
+      img('photo-1544966503-7cc5ac882d5f'),
+      img('photo-1591047139829-d91aecb6caea'),
+      img('photo-1578768079052-aa76e52b5d8d'),
     ],
     colours: ['Black', 'Brown', 'Olive'],
     sizes: ['M', 'L', 'XL', 'XXL'],
@@ -356,9 +356,9 @@ export const products: Product[] = [
       'Breathable mid-weight French terry designed for milder days. Clean lines, minimal branding, and a versatile everyday fit.',
     price: 78,
     images: [
-      img('photo-1620799140408-edc6dcb6d633'), // light grey hoodie
-      img('photo-1515886657613-9f3515b0c78f'), // summer fashion layer
-      img('photo-1578587018452-892b622ab76e'), // soft light hoodie
+      img('photo-1620799140408-edc6dcb6d633'),
+      img('photo-1515886657613-9f3515b0c78f'),
+      img('photo-1578587018452-892b622ab76e'),
     ],
     colours: ['Heather Grey', 'White', 'Sky'],
     sizes: ['S', 'M', 'L', 'XL'],
@@ -380,9 +380,9 @@ export const products: Product[] = [
       'Precision FDM print in premium filament. Angular form designed as a desk statement piece. Smooth layer lines, solid fill base for stability.',
     price: 42,
     images: [
-      img('photo-1635070041078-e363dbe005cb'), // geometric / abstract form
-      img('photo-1618005182384-a83a8bd57fbe'), // abstract 3D shape
-      img('photo-1558618666-fcd25c85cd64'), // maker / printed object
+      img('photo-1635070041078-e363dbe005cb'),
+      img('photo-1618005182384-a83a8bd57fbe'),
+      img('photo-1558618666-fcd25c85cd64'),
     ],
     colours: ['Matte Black', 'Silk Gold', 'Neon Cyan'],
     sizes: ['Standard', 'Large'],
@@ -421,9 +421,9 @@ export const products: Product[] = [
     price: 28,
     salePrice: 22,
     images: [
-      img('photo-1558618666-fcd25c85cd64'), // printed utility
-      img('photo-1581092160562-40aa08e78837'), // desk tech object
-      img('photo-1581092918056-0c4c3acd3789'), // workshop print
+      img('photo-1558618666-fcd25c85cd64'),
+      img('photo-1581092160562-40aa08e78837'),
+      img('photo-1581092918056-0c4c3acd3789'),
     ],
     colours: ['Matte Black', 'White', 'Orange'],
     sizes: ['Standard'],
@@ -460,9 +460,9 @@ export const products: Product[] = [
       'Minimal hex planter for succulents. Drainage channel, dual-wall strength, silk finish options.',
     price: 24,
     images: [
-      img('photo-1485955900006-10f4d32477dc'), // minimal planter / plant pot
-      img('photo-1459411552884-841db9b3fc2a'), // geometric planter vibe
-      img('photo-1416879595882-3373a0480b5b'), // small plant in pot
+      img('photo-1485955900006-10f4d32477dc'),
+      img('photo-1459411552884-841db9b3fc2a'),
+      img('photo-1416879595882-3373a0480b5b'),
     ],
     colours: ['Sand', 'White', 'Charcoal'],
     sizes: ['One Size'],
@@ -500,9 +500,9 @@ export const products: Product[] = [
       'Low-poly display mask for wall mounting. Faceted geometry, statement piece for creative spaces.',
     price: 68,
     images: [
-      img('photo-1535223289827-42f1e9919769'), // low poly / digital art
-      img('photo-1618005182384-a83a8bd57fbe'), // faceted abstract
-      img('photo-1635070041078-e363dbe005cb'), // geometric form
+      img('photo-1535223289827-42f1e9919769'),
+      img('photo-1618005182384-a83a8bd57fbe'),
+      img('photo-1635070041078-e363dbe005cb'),
     ],
     colours: ['Gunmetal', 'White', 'Neon Edge'],
     sizes: ['Display'],
@@ -539,9 +539,9 @@ export const products: Product[] = [
       'Orbit-inspired phone stand. Stable base, cable pass-through, works with most phones in landscape or portrait.',
     price: 32,
     images: [
-      img('photo-1581092160562-40aa08e78837'), // phone / desk stand context
-      img('photo-1512941937669-90a1b58e7e9c'), // phone on stand lifestyle
-      img('photo-1558618666-fcd25c85cd64'), // printed accessory
+      img('photo-1581092160562-40aa08e78837'),
+      img('photo-1512941937669-90a1b58e7e9c'),
+      img('photo-1558618666-fcd25c85cd64'),
     ],
     colours: ['Matte Black', 'Ice White', 'Cyan'],
     sizes: ['Universal'],
@@ -579,9 +579,9 @@ export const products: Product[] = [
     price: 36,
     salePrice: 29,
     images: [
-      img('photo-1565193566173-7a0ee3dbe261'), // mechanical keyboard / keycaps
-      img('photo-1595225476474-87563907a212'), // keyboard close-up
-      img('photo-1587829741301-dc798b83add3'), // keys detail
+      img('photo-1565193566173-7a0ee3dbe261'),
+      img('photo-1595225476474-87563907a212'),
+      img('photo-1587829741301-dc798b83add3'),
     ],
     colours: ['Black', 'Neon Cyan', 'Magenta'],
     sizes: ['MX Set'],
