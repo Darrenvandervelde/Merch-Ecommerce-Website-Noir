@@ -4,6 +4,7 @@ import { Search, User, Heart, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCartStore } from '../../store/cartStore';
 import { useAuthStore } from '../../store/authStore';
 import { useWishlistStore } from '../../store/wishlistStore';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { cn } from '../../utils/cn';
 
 const navLinks = [
@@ -30,12 +31,9 @@ export function Header() {
   const user = useAuthStore((s) => s.user);
 
   useEffect(() => {
-    if (searchOpen) {
-      searchInputRef.current?.focus();
-    }
+    if (searchOpen) searchInputRef.current?.focus();
   }, [searchOpen]);
 
-  // Close search on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSearchOpen(false);
@@ -49,20 +47,17 @@ export function Header() {
     const q = query.trim();
     setSearchOpen(false);
     setQuery('');
-    if (q) {
-      navigate(`/shop?q=${encodeURIComponent(q)}`);
-    } else {
-      navigate('/shop');
-    }
+    if (q) navigate(`/shop?q=${encodeURIComponent(q)}`);
+    else navigate('/shop');
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-200">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-brand-950/95 backdrop-blur-md border-b border-brand-200 dark:border-brand-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-20">
           <button
             type="button"
-            className="lg:hidden p-2 -ml-2 text-brand-900"
+            className="lg:hidden p-2 -ml-2 text-brand-900 dark:text-brand-100"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
@@ -71,7 +66,7 @@ export function Header() {
 
           <Link
             to="/"
-            className="text-2xl font-extrabold tracking-tighter text-brand-950"
+            className="text-2xl font-extrabold tracking-tighter text-brand-950 dark:text-white"
           >
             NOIR
           </Link>
@@ -83,8 +78,10 @@ export function Header() {
                 to={link.to}
                 className={({ isActive }) =>
                   cn(
-                    'text-sm font-medium transition-colors hover:text-brand-950',
-                    isActive ? 'text-brand-950' : 'text-brand-600'
+                    'text-sm font-medium transition-colors hover:text-brand-950 dark:hover:text-white',
+                    isActive
+                      ? 'text-brand-950 dark:text-white'
+                      : 'text-brand-600 dark:text-brand-400'
                   )
                 }
               >
@@ -94,10 +91,12 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-1 sm:gap-3">
+            <ThemeToggle compact />
+
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="p-2 text-brand-700 hover:text-brand-950 transition-colors"
+              className="p-2 text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white transition-colors"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -105,7 +104,7 @@ export function Header() {
 
             <Link
               to={user ? '/account' : '/login'}
-              className="hidden sm:block p-2 text-brand-700 hover:text-brand-950 transition-colors"
+              className="hidden sm:block p-2 text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white transition-colors"
               aria-label={user ? 'Account' : 'Log in'}
             >
               <User className="h-5 w-5" />
@@ -113,12 +112,12 @@ export function Header() {
 
             <Link
               to="/wishlist"
-              className="relative p-2 text-brand-700 hover:text-brand-950 transition-colors"
+              className="relative p-2 text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white transition-colors"
               aria-label={`Wishlist (${wishlistCount} items)`}
             >
               <Heart className="h-5 w-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-900 text-[10px] font-bold text-white">
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-900 dark:bg-white dark:text-brand-950 text-[10px] font-bold text-white">
                   {wishlistCount}
                 </span>
               )}
@@ -126,12 +125,12 @@ export function Header() {
 
             <Link
               to="/cart"
-              className="relative p-2 text-brand-700 hover:text-brand-950 transition-colors"
+              className="relative p-2 text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white transition-colors"
               aria-label={`Cart (${cartCount} items)`}
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-900 text-[10px] font-bold text-white">
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-900 dark:bg-white dark:text-brand-950 text-[10px] font-bold text-white">
                   {cartCount}
                 </span>
               )}
@@ -140,9 +139,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Search overlay */}
       {searchOpen && (
-        <div className="absolute inset-x-0 top-full border-b border-brand-200 bg-white shadow-lg">
+        <div className="absolute inset-x-0 top-full border-b border-brand-200 dark:border-brand-800 bg-white dark:bg-brand-950 shadow-lg">
           <form
             onSubmit={submitSearch}
             className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex gap-3"
@@ -155,7 +153,7 @@ export function Header() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search merch & 3D prints…"
-                className="w-full h-11 pl-10 pr-4 border border-brand-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
+                className="w-full h-11 pl-10 pr-4 border border-brand-300 dark:border-brand-700 dark:bg-brand-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-900"
                 aria-label="Search products"
               />
             </div>
@@ -177,7 +175,6 @@ export function Header() {
         </div>
       )}
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
@@ -185,8 +182,8 @@ export function Header() {
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute inset-y-0 left-0 w-full max-w-xs bg-white shadow-xl flex flex-col">
-            <div className="flex items-center justify-between px-4 h-16 border-b border-brand-200">
+          <div className="absolute inset-y-0 left-0 w-full max-w-xs bg-white dark:bg-brand-950 shadow-xl flex flex-col">
+            <div className="flex items-center justify-between px-4 h-16 border-b border-brand-200 dark:border-brand-800">
               <span className="text-xl font-extrabold tracking-tighter">NOIR</span>
               <button
                 type="button"
@@ -208,21 +205,24 @@ export function Header() {
                     cn(
                       'block px-3 py-3 text-base font-medium rounded-md transition-colors',
                       isActive
-                        ? 'bg-brand-100 text-brand-950'
-                        : 'text-brand-700 hover:bg-brand-50'
+                        ? 'bg-brand-100 dark:bg-brand-800 text-brand-950 dark:text-white'
+                        : 'text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-900'
                     )
                   }
                 >
                   {link.label}
                 </NavLink>
               ))}
+              <div className="px-3 pt-4">
+                <ThemeToggle />
+              </div>
             </nav>
 
-            <div className="border-t border-brand-200 p-4 space-y-2">
+            <div className="border-t border-brand-200 dark:border-brand-800 p-4 space-y-2">
               <Link
                 to="/account"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 text-brand-700"
+                className="flex items-center gap-3 px-3 py-2 text-brand-700 dark:text-brand-300"
               >
                 <User className="h-5 w-5" />
                 Account
@@ -230,7 +230,7 @@ export function Header() {
               <Link
                 to="/wishlist"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 text-brand-700"
+                className="flex items-center gap-3 px-3 py-2 text-brand-700 dark:text-brand-300"
               >
                 <Heart className="h-5 w-5" />
                 Wishlist ({wishlistCount})

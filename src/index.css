@@ -30,32 +30,25 @@ body {
   margin: 0;
 }
 
+/* Dark mode — class on <html> from themeStore */
+html.dark body {
+  @apply bg-brand-950 text-brand-100;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-brand-900;
 }
 
-/* Ensure interactive elements have minimum touch target where reasonable */
-button:not([class*="h-"]),
-a.inline-flex {
-  min-height: 2rem;
+html.dark :focus-visible {
+  @apply outline-brand-200;
 }
 
 img {
   @apply max-w-full h-auto;
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 
 ::-webkit-scrollbar {
@@ -64,6 +57,9 @@ img {
 }
 ::-webkit-scrollbar-track {
   @apply bg-brand-100;
+}
+html.dark ::-webkit-scrollbar-track {
+  @apply bg-brand-800;
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-brand-400 rounded-full;
