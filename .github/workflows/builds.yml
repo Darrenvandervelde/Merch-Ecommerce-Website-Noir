@@ -1,24 +1,17 @@
-name: Node.js CI
+# Deprecated — replaced by ci.yml
+# Kept as a no-op so old workflow links do not confuse contributors.
+# Delete this file after confirming ci.yml is the only active workflow.
 
-on: 
-  push: 
-    branches:
-      - main
+name: Node.js CI (legacy)
 
-  pull_request: 
-    branches:
-      - main
+on:
+  workflow_dispatch:
 
-jobs: 
-  build: 
-    runs-on: windows-latest
-    
-    steps: 
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with: 
-          node-version: '20.x'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+jobs:
+  skipped:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Legacy workflow disabled
+        run: |
+          echo "This workflow is deprecated. Use .github/workflows/ci.yml instead."
+          exit 0
