@@ -19,6 +19,9 @@ import { PrintTimeEstimate } from '../components/products/PrintTimeEstimate';
 import { StickyAddToCart } from '../components/products/StickyAddToCart';
 import { PhotoReviewGallery } from '../components/products/PhotoReviewGallery';
 import { BundleBuilder } from '../components/products/BundleBuilder';
+import { ProductJsonLd } from '../components/products/ProductJsonLd';
+import { ProductImageGallery } from '../components/products/ProductImageGallery';
+import { RecentlyViewed } from '../components/products/RecentlyViewed';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -48,6 +51,23 @@ export function ProductDetails() {
     product?.name ?? 'Product',
     product?.description?.slice(0, 155)
   );
+
+  useOpenGraph({
+    title: product?.name ?? 'Product',
+    description: product?.description?.slice(0, 155),
+    image: product?.images[0],
+    type: 'product',
+    price: product?.salePrice ?? product?.price,
+    availability: product
+      ? product.stock > 0
+        ? 'in stock'
+        : 'out of stock'
+      : undefined,
+  });
+
+  useEffect(() => {
+    if (product) trackView(product);
+  }, [product, trackView]);
 
   const handleActionsIntersect = useCallback((isIntersecting: boolean) => {
     setActionsVisible((prev) => (prev === isIntersecting ? prev : isIntersecting));
