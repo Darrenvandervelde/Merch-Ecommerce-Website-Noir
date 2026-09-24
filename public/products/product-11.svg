@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Zip-Up Tech">
+  <rect width="600" height="800" fill="#f4f4f5"/>
+  <path d="M180 160 Q300 60 420 160 L450 200 L480 420 Q300 460 120 420 L150 200 Z" fill="#1f2937" stroke="#34d399" stroke-width="3"/>
+  <path d="M220 150 Q300 100 380 150 Q300 190 220 150" fill="#1f2937" stroke="#34d399" stroke-width="3"/>
+  <line x1="300" y1="200" x2="300" y2="400" stroke="#34d399" stroke-width="3"/>
+  <rect x="0" y="640" width="600" height="160" fill="#0a0a0a"/>
+  <text x="40" y="690" fill="#a1a1aa" font-family="system-ui,sans-serif" font-size="18" font-weight="600" letter-spacing="4">HOODIE</text>
+  <text x="40" y="735" fill="#fafafa" font-family="system-ui,sans-serif" font-size="28" font-weight="700">Zip-Up Tech</text>
+  <text x="40" y="770" fill="#71717a" font-family="system-ui,sans-serif" font-size="16" letter-spacing="3">NOIR</text>
+</svg>
