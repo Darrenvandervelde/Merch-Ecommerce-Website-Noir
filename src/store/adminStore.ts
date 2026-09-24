@@ -45,7 +45,6 @@ interface AdminState {
     id: string,
     paymentStatus: AdminOrder['paymentStatus']
   ) => void;
-  /** Pull latest images/copy from the seed catalogue for known product IDs */
   resyncCatalogueImages: () => void;
   getStats: () => {
     totalProducts: number;
@@ -56,7 +55,6 @@ interface AdminState {
   };
 }
 
-/** Merge seed catalogue images onto persisted products so storefront photos stay current. */
 function mergeSeedImages(persisted: Product[]): Product[] {
   const seedById = new Map(initialProducts.map((p) => [p.id, p]));
   const merged = persisted.map((p) => {
@@ -70,7 +68,6 @@ function mergeSeedImages(persisted: Product[]): Product[] {
       slug: seed.slug,
     };
   });
-  // Ensure any new seed products appear even if localStorage was older
   const existingIds = new Set(merged.map((p) => p.id));
   for (const seed of initialProducts) {
     if (!existingIds.has(seed.id)) {
@@ -79,6 +76,9 @@ function mergeSeedImages(persisted: Product[]): Product[] {
   }
   return merged;
 }
+
+const localThumb = (n: number) =>
+  `/products/product-${String(n).padStart(2, '0')}.svg`;
 
 const seedOrders: AdminOrder[] = [
   {
@@ -90,7 +90,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-001',
         name: 'Premium Black Hoodie',
         slug: 'premium-black-hoodie',
-        image: pexelsThumb(1183266),
+        image: localThumb(9),
         price: 98,
         colour: 'Black',
         size: 'L',
@@ -125,7 +125,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'ts-002',
         name: 'Classic White Tee',
         slug: 'classic-white-tee',
-        image: pexelsThumb(6311392),
+        image: localThumb(2),
         price: 36,
         salePrice: 28,
         colour: 'White',
@@ -161,7 +161,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-002',
         name: 'Oversized Essential Hoodie',
         slug: 'oversized-essential-hoodie',
-        image: pexelsThumb(7671185),
+        image: localThumb(10),
         price: 88,
         salePrice: 72,
         colour: 'Heather Grey',
@@ -173,7 +173,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'ts-001',
         name: 'Essential Black Tee',
         slug: 'essential-black-tee',
-        image: pexelsThumb(955859),
+        image: localThumb(1),
         price: 38,
         colour: 'Black',
         size: 'L',
@@ -208,7 +208,7 @@ const seedOrders: AdminOrder[] = [
         productId: 'hd-005',
         name: 'Heavyweight Logo Hoodie',
         slug: 'heavyweight-logo-hoodie',
-        image: pexelsThumb(3755706),
+        image: localThumb(13),
         price: 105,
         colour: 'Black',
         size: 'M',
@@ -235,10 +235,6 @@ const seedOrders: AdminOrder[] = [
     estimatedDelivery: '2026-09-03',
   },
 ];
-
-function pexelsThumb(id: number) {
-  return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=200`;
-}
 
 export const useAdminStore = create<AdminState>()(
   persist(
@@ -329,8 +325,7 @@ export const useAdminStore = create<AdminState>()(
       },
     }),
     {
-      // Bump version so browsers drop stale product images from older seeds
-      name: 'noir-admin-v5',
+      name: 'noir-admin-v6',
       partialize: (state) => ({
         products: state.products,
         orders: state.orders,
