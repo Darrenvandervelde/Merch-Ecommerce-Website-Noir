@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useToastStore } from '../store/toastStore';
+import { useWaitlistStore } from '../store/waitlistStore';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { fetchOrders } from '../api/orders';
 import { Button } from '../components/common/Button';
@@ -14,6 +15,8 @@ export function Account() {
   const logout = useAuthStore((s) => s.logout);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const addToast = useToastStore((s) => s.addToast);
+  const waitlist = useWaitlistStore((s) => s.entries);
+  const removeWaitlist = useWaitlistStore((s) => s.removeEntry);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +40,27 @@ export function Account() {
             Register
           </Button>
         </div>
+        {waitlist.length > 0 && (
+          <div className="mt-10 text-left border border-brand-200 rounded-lg p-4">
+            <h2 className="text-sm font-semibold">Restock alerts (guest)</h2>
+            <ul className="mt-2 space-y-2 text-sm text-brand-600">
+              {waitlist.map((e) => (
+                <li key={e.id} className="flex justify-between gap-2">
+                  <span>
+                    {e.productName} · {e.colour}/{e.size}
+                  </span>
+                  <button
+                    type="button"
+                    className="text-xs underline"
+                    onClick={() => removeWaitlist(e.id)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   }
@@ -95,6 +119,43 @@ export function Account() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="mt-10">
+        <h2 className="text-lg font-semibold text-brand-950">
+          Restock notifications
+        </h2>
+        {waitlist.length === 0 ? (
+          <p className="mt-3 text-sm text-brand-500">
+            No active alerts. Join a waitlist on out-of-stock variants.
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {waitlist.map((e) => (
+              <li
+                key={e.id}
+                className="border border-brand-200 rounded-lg p-4 flex justify-between gap-3 text-sm"
+              >
+                <div>
+                  <p className="font-medium">{e.productName}</p>
+                  <p className="text-brand-500">
+                    {e.colour} / {e.size} · {e.email}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-brand-500 underline shrink-0"
+                  onClick={() => {
+                    removeWaitlist(e.id);
+                    addToast('Alert removed', 'info');
+                  }}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

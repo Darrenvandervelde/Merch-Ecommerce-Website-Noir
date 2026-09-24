@@ -1,24 +1,37 @@
 import { useState } from 'react';
 import { useAdminStore } from '../../store/adminStore';
 import { useToastStore } from '../../store/toastStore';
-import { updateProduct } from '../../api/products';
+import { updateProduct, createProduct, deleteProduct } from '../../api/products';
 import { formatPrice } from '../../utils/format';
 import { Button } from '../../components/common/Button';
-import type { Product } from '../../types';
+import type { Product, ProductCategory } from '../../types';
+
+function slugify(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
 
 export function AdminProducts() {
   const products = useAdminStore((s) => s.products);
   const updateProductPrice = useAdminStore((s) => s.updateProductPrice);
   const updateProductStock = useAdminStore((s) => s.updateProductStock);
   const toggleProductFlag = useAdminStore((s) => s.toggleProductFlag);
+  const addProduct = useAdminStore((s) => s.addProduct);
+  const removeProduct = useAdminStore((s) => s.removeProduct);
   const addToast = useToastStore((s) => s.addToast);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState('');
   const [editSale, setEditSale] = useState('');
   const [editStock, setEditStock] = useState('');
-  const [filter, setFilter] = useState<'all' | 'tshirt' | 'hoodie'>('all');
+  const [filter, setFilter] = useState<'all' | ProductCategory>('all');
   const [search, setSearch] = useState('');
+  const [showCreate, setShowCreate] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newPrice, setNewPrice] = useState('49');
+  const [newCategory, setNewCategory] = useState<ProductCategory>('tshirt');
 
   const filtered = products.filter((p) => {
     if (filter !== 'all' && p.category !== filter) return false;
@@ -70,7 +83,6 @@ export function AdminProducts() {
       addToast('Product updated', 'success');
       cancelEdit();
     } catch (err) {
-      // Still update local store so UI works offline
       updateProductPrice(id, price, sale);
       updateProductStock(id, stock);
       addToast(
@@ -83,16 +95,110 @@ export function AdminProducts() {
     }
   };
 
+  const handleCreate = async () => {
+    if (!newName.trim()) {
+      addToast('Name required', 'error');
+      return;
+    }
+    const price = parseFloat(newPrice);
+    if (isNaN(price) || price < 0) {
+      addToast('Invalid price', 'error');
+      return;
+    }
+    const slug = slugify(newName);
+    const product: Product = {
+      id: `custom-${Date.now()}`,
+      name: newName.trim(),
+      slug,
+      category: newCategory,
+      description: 'Added from admin (demo).',
+      price,
+      images: [
+        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600',
+      ],
+      colours: ['Black'],
+      sizes: ['S', 'M', 'L', 'XL'],
+      stock: 20,
+      rating: 0,
+      reviewCount: 0,
+      featured: false,
+      bestseller: false,
+      newArrival: true,
+    };
+
+    try {
+      const remote = await createProduct(product);
+      addProduct(remote);
+    } catch {
+      addProduct(product);
+    }
+    addToast('Product created', 'success');
+    setShowCreate(false);
+    setNewName('');
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Delete this product from the local catalogue?')) return;
+    try {
+      await deleteProduct(id);
+    } catch {
+      /* offline ok */
+    }
+    removeProduct(id);
+    addToast('Product removed', 'info');
+  };
+
   return (
     <div>
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-brand-950">Products</h1>
           <p className="mt-1 text-sm text-brand-500">
-            Manage catalogue, pricing and stock
+            Manage catalogue, pricing and stock (CRUD)
           </p>
         </div>
+        <Button size="sm" onClick={() => setShowCreate((v) => !v)}>
+          {showCreate ? 'Cancel' : 'Add product'}
+        </Button>
       </div>
+
+      {showCreate && (
+        <div className="mb-6 rounded-lg border border-brand-200 bg-white p-4 space-y-3 max-w-lg">
+          <p className="text-sm font-medium">New product</p>
+          <input
+            type="text"
+            placeholder="Name"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="w-full h-10 px-3 border border-brand-300 rounded-md text-sm"
+          />
+          <div className="flex gap-3">
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+              className="w-28 h-10 px-3 border border-brand-300 rounded-md text-sm"
+              aria-label="Price"
+            />
+            <select
+              value={newCategory}
+              onChange={(e) =>
+                setNewCategory(e.target.value as ProductCategory)
+              }
+              className="h-10 px-3 border border-brand-300 rounded-md text-sm"
+            >
+              <option value="tshirt">T-Shirt</option>
+              <option value="hoodie">Hoodie</option>
+              <option value="print3d">3D Lab</option>
+            </select>
+          </div>
+          <Button size="sm" onClick={handleCreate}>
+            Create
+          </Button>
+        </div>
+      )}
 
       <div className="mb-6 flex flex-col sm:flex-row gap-3">
         <input
@@ -110,6 +216,7 @@ export function AdminProducts() {
           <option value="all">All categories</option>
           <option value="tshirt">T-Shirts</option>
           <option value="hoodie">Hoodies</option>
+          <option value="print3d">3D Lab</option>
         </select>
       </div>
 
@@ -236,9 +343,22 @@ export function AdminProducts() {
                         </Button>
                       </div>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => startEdit(p)}>
-                        Edit
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => startEdit(p)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleDelete(p.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     )}
                   </td>
                 </tr>
@@ -254,9 +374,7 @@ export function AdminProducts() {
       </div>
 
       <p className="mt-4 text-xs text-brand-400">
-        Price and stock changes are saved locally (localStorage) and will
-        reflect on the storefront after refresh. In production these would
-        call your backend API.
+        Changes save locally and attempt the Express API when available.
       </p>
     </div>
   );

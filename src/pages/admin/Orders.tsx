@@ -11,6 +11,13 @@ const STATUS_OPTIONS: OrderStatus[] = [
   'refunded',
 ];
 
+const FLOW: OrderStatus[] = [
+  'pending',
+  'processing',
+  'shipped',
+  'delivered',
+];
+
 const statusColor: Record<OrderStatus, string> = {
   pending: 'bg-amber-100 text-amber-800',
   processing: 'bg-blue-100 text-blue-800',
@@ -19,6 +26,34 @@ const statusColor: Record<OrderStatus, string> = {
   cancelled: 'bg-red-100 text-red-800',
   refunded: 'bg-brand-100 text-brand-700',
 };
+
+function StatusTimeline({ status }: { status: OrderStatus }) {
+  if (status === 'cancelled' || status === 'refunded') {
+    return (
+      <p className="text-xs text-red-600 font-medium capitalize">{status}</p>
+    );
+  }
+  const idx = FLOW.indexOf(status);
+  return (
+    <ol className="flex flex-wrap gap-1.5" aria-label={`Status: ${status}`}>
+      {FLOW.map((step, i) => {
+        const done = i <= idx;
+        return (
+          <li
+            key={step}
+            className={`text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full ${
+              done
+                ? 'bg-brand-900 text-white'
+                : 'bg-brand-100 text-brand-400'
+            }`}
+          >
+            {step}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
 export function AdminOrders() {
   const orders = useAdminStore((s) => s.orders);
@@ -59,6 +94,9 @@ export function AdminOrders() {
                   {order.email} ·{' '}
                   {new Date(order.createdAt).toLocaleDateString()}
                 </p>
+                <div className="mt-2">
+                  <StatusTimeline status={order.status} />
+                </div>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
                 <span
@@ -85,6 +123,7 @@ export function AdminOrders() {
                     handleStatus(order.id, e.target.value as OrderStatus)
                   }
                   className="h-9 px-2 border border-brand-300 rounded-md text-sm"
+                  aria-label={`Update status for ${order.orderNumber}`}
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option key={s} value={s}>

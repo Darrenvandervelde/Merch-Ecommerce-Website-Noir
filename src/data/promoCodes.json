@@ -1,0 +1,36 @@
+{
+  "codes": [
+    {
+      "code": "NOIR10",
+      "type": "percent",
+      "value": 10,
+      "description": "10% off your order",
+      "minSubtotal": 0,
+      "active": true
+    },
+    {
+      "code": "FREESHIP",
+      "type": "shipping",
+      "value": 0,
+      "description": "Free standard shipping",
+      "minSubtotal": 0,
+      "active": true
+    },
+    {
+      "code": "LAB15",
+      "type": "percent",
+      "value": 15,
+      "description": "15% off (min $50)",
+      "minSubtotal": 50,
+      "active": true
+    },
+    {
+      "code": "WELCOME5",
+      "type": "fixed",
+      "value": 5,
+      "description": "$5 off",
+      "minSubtotal": 25,
+      "active": true
+    }
+  ]
+}
