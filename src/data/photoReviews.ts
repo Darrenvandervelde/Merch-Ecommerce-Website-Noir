@@ -1,6 +1,6 @@
 import type { PhotoReview } from '../types';
 
-/** Demo photo reviews for 3D Lab + apparel */
+/** Curated photo reviews for 3D Lab + apparel (JSON-friendly data). */
 export const photoReviews: PhotoReview[] = [
   {
     id: 'r1',
@@ -50,8 +50,37 @@ export const photoReviews: PhotoReview[] = [
     photoUrl:
       'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&q=80',
   },
+  {
+    id: 'r5',
+    productId: 'ts-001',
+    author: 'Chris D.',
+    rating: 5,
+    title: 'Heavyweight as promised',
+    body: 'True to size. Black doesn’t fade after a few washes.',
+    date: '2026-09-05',
+    verified: true,
+    photoUrl:
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80',
+  },
+  {
+    id: 'r6',
+    productId: 'hd-001',
+    author: 'Morgan T.',
+    rating: 5,
+    title: 'Daily driver hoodie',
+    body: 'Soft inside, holds shape. Wearing this every other day.',
+    date: '2026-08-30',
+    verified: true,
+    photoUrl:
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80',
+  },
 ];
 
 export function getReviewsForProduct(productId: string): PhotoReview[] {
   return photoReviews.filter((r) => r.productId === productId);
+}
+
+/** All reviews with photos — for a global UGC strip if needed */
+export function getAllPhotoReviews(): PhotoReview[] {
+  return photoReviews.filter((r) => Boolean(r.photoUrl));
 }
