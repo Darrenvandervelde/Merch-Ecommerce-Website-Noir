@@ -32,3 +32,29 @@ apiClient.interceptors.response.use(
     return Promise.reject(new Error(message));
   }
 );
+
+/** Returns true if the Express API responds on /health or /products. */
+export async function checkApiHealth(): Promise<{
+  online: boolean;
+  baseURL: string;
+  message: string;
+}> {
+  try {
+    await apiClient.get('/health', { timeout: 4000 });
+    return { online: true, baseURL, message: 'API online' };
+  } catch {
+    try {
+      await apiClient.get('/products', { timeout: 4000 });
+      return { online: true, baseURL, message: 'API reachable via /products' };
+    } catch (err) {
+      return {
+        online: false,
+        baseURL,
+        message:
+          err instanceof Error
+            ? err.message
+            : 'API offline — using local catalogue',
+      };
+    }
+  }
+}
