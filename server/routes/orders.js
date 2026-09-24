@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { getDb, saveDb } from '../db.js';
 import { requireAuth, requireAdmin, optionalAuth } from '../middleware/auth.js';
+import { upsertOrderToSupabase } from '../lib/supabaseOrders.js';
 
 const router = Router();
 
@@ -29,10 +30,13 @@ const createOrderSchema = z.object({
     phone: z.string().optional(),
   }),
   deliveryMethod: z.enum(['standard', 'express']).default('standard'),
+  currency: z.string().default('ZAR'),
+  /** When true, mark paid immediately (demo / offline). Default false for Paystack flow. */
+  simulatePaid: z.boolean().optional(),
 });
 
 /** POST /api/orders – create order (re-validates prices & stock on server) */
-router.post('/', optionalAuth, (req, res) => {
+router.post('/', optionalAuth, async (req, res) => {
   try {
     const body = createOrderSchema.parse(req.body);
     const db = getDb();
@@ -70,15 +74,18 @@ router.post('/', optionalAuth, (req, res) => {
         maxStock: product.stock,
       });
 
-      // Decrement stock
       product.stock -= item.quantity;
     }
 
+    const currency = body.currency || process.env.CURRENCY || 'ZAR';
     const shipping =
       body.deliveryMethod === 'express' ? 18 : subtotal >= 100 ? 0 : 8;
-    const tax = Math.round(subtotal * 0.08 * 100) / 100;
+    // SA VAT 15% when currency is ZAR; keep 8% demo tax for other currencies
+    const taxRate = currency === 'ZAR' ? 0.15 : 0.08;
+    const tax = Math.round(subtotal * taxRate * 100) / 100;
     const total = Math.round((subtotal + shipping + tax) * 100) / 100;
 
+    const simulatePaid = body.simulatePaid === true;
     const order = {
       id: `ord-${Date.now().toString(36)}`,
       orderNumber: `ORD-${Date.now().toString(36).toUpperCase()}`,
@@ -89,8 +96,9 @@ router.post('/', optionalAuth, (req, res) => {
       shipping,
       tax,
       total,
-      status: 'pending',
-      paymentStatus: 'paid', // simulated – Stripe would set this via webhook
+      currency,
+      status: simulatePaid ? 'processing' : 'pending',
+      paymentStatus: simulatePaid ? 'paid' : 'pending',
       shippingAddress: body.shippingAddress,
       deliveryMethod: body.deliveryMethod,
       createdAt: new Date().toISOString(),
@@ -101,6 +109,7 @@ router.post('/', optionalAuth, (req, res) => {
 
     db.orders.push(order);
     saveDb(db);
+    await upsertOrderToSupabase(order);
 
     res.status(201).json(order);
   } catch (err) {
@@ -110,6 +119,33 @@ router.post('/', optionalAuth, (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Could not create order' });
   }
+});
+
+/**
+ * GET /api/orders/track/:orderNumber — public tracking (limited fields)
+ * Must be registered before /:id routes that require auth.
+ */
+router.get('/track/:orderNumber', (req, res) => {
+  const db = getDb();
+  const q = String(req.params.orderNumber || '').trim().toUpperCase();
+  const order = db.orders.find(
+    (o) =>
+      String(o.orderNumber).toUpperCase() === q ||
+      String(o.id).toUpperCase() === q
+  );
+  if (!order) {
+    return res.status(404).json({ message: 'Order not found' });
+  }
+  res.json({
+    orderNumber: order.orderNumber,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    createdAt: order.createdAt,
+    estimatedDelivery: order.estimatedDelivery,
+    itemCount: order.items?.length ?? 0,
+    currency: order.currency || 'ZAR',
+    total: order.total,
+  });
 });
 
 /** GET /api/orders – admin: all orders; user: own orders */
@@ -144,7 +180,7 @@ router.get('/:id', requireAuth, (req, res) => {
 });
 
 /** PATCH /api/orders/:id/status – admin */
-router.patch('/:id/status', requireAdmin, (req, res) => {
+router.patch('/:id/status', requireAdmin, async (req, res) => {
   const { status, paymentStatus } = req.body;
   const db = getDb();
   const idx = db.orders.findIndex((o) => o.id === req.params.id);
@@ -154,6 +190,7 @@ router.patch('/:id/status', requireAdmin, (req, res) => {
   if (status) db.orders[idx].status = status;
   if (paymentStatus) db.orders[idx].paymentStatus = paymentStatus;
   saveDb(db);
+  await upsertOrderToSupabase(db.orders[idx]);
   res.json(db.orders[idx]);
 });
 
