@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="3D Lab Starter Kit">
+  <rect width="600" height="800" fill="#f4f4f5"/>
+  <rect x="150" y="140" width="300" height="300" rx="20" fill="#022c22" stroke="#a7f3d0" stroke-width="3"/>
+  <polygon points="300,180 360,220 360,280 300,320 240,280 240,220" fill="none" stroke="#a7f3d0" stroke-width="2"/>
+  <rect x="210" y="340" width="180" height="60" rx="8" fill="none" stroke="#a7f3d0" stroke-width="2"/>
+  <rect x="0" y="640" width="600" height="160" fill="#0a0a0a"/>
+  <text x="40" y="690" fill="#a1a1aa" font-family="system-ui,sans-serif" font-size="18" font-weight="600" letter-spacing="4">BUNDLE</text>
+  <text x="40" y="735" fill="#fafafa" font-family="system-ui,sans-serif" font-size="28" font-weight="700">3D Lab Starter Kit</text>
+  <text x="40" y="770" fill="#71717a" font-family="system-ui,sans-serif" font-size="16" letter-spacing="3">NOIR</text>
+</svg>

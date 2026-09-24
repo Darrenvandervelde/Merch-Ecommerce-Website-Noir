@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Cropped Boxy">
+  <rect width="600" height="800" fill="#f4f4f5"/>
+  <path d="M160 180 Q300 80 440 180 L460 220 L470 360 Q300 390 130 360 L140 220 Z" fill="#ecfdf5" stroke="#065f46" stroke-width="3"/>
+  <path d="M220 170 Q300 120 380 170 Q300 210 220 170" fill="#ecfdf5" stroke="#065f46" stroke-width="3"/>
+  <rect x="0" y="640" width="600" height="160" fill="#0a0a0a"/>
+  <text x="40" y="690" fill="#a1a1aa" font-family="system-ui,sans-serif" font-size="18" font-weight="600" letter-spacing="4">HOODIE</text>
+  <text x="40" y="735" fill="#fafafa" font-family="system-ui,sans-serif" font-size="28" font-weight="700">Cropped Boxy</text>
+  <text x="40" y="770" fill="#71717a" font-family="system-ui,sans-serif" font-size="16" letter-spacing="3">NOIR</text>
+</svg>

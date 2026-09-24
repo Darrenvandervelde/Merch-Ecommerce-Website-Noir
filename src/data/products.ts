@@ -1,15 +1,14 @@
 import type { Product } from '../types';
 
 /**
- * Product catalogue with distinct merchandise photography.
- * Sources: Pexels (product/lifestyle) — free to use commercially.
- * Replace with brand CDN paths when you have NOIR studio shots.
+ * Product catalogue with local NOIR product imagery.
+ * Images live in /public/products/product-01.svg … product-24.svg
+ * (24 branded assets — one primary per SKU + gallery alternates).
  */
-const pexels = (id: number, w = 1200) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+const img = (n: number) =>
+  `/products/product-${String(n).padStart(2, '0')}.svg`;
 
 export const products: Product[] = [
-  // ==================== T-SHIRTS ====================
   {
     id: 'ts-001',
     name: 'Essential Black Tee',
@@ -18,11 +17,7 @@ export const products: Product[] = [
     description:
       'Our signature heavyweight cotton tee. Soft hand-feel, reinforced seams, and a relaxed streetwear fit. Perfect everyday essential that only gets better with wear.',
     price: 38,
-    images: [
-      pexels(955859),
-      pexels(1656684),
-      pexels(4066293),
-    ],
+    images: [img(1), img(7), img(23)],
     colours: ['Black', 'White', 'Charcoal'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     stock: 120,
@@ -41,11 +36,7 @@ export const products: Product[] = [
       'Crisp white organic cotton tee with a clean crew neck and slightly boxy cut. Minimal branding, maximum quality. The foundation of every wardrobe.',
     price: 36,
     salePrice: 28,
-    images: [
-      pexels(6311392),
-      pexels(7671168),
-      pexels(996329),
-    ],
+    images: [img(2), img(8), img(23)],
     colours: ['White', 'Off-White'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 85,
@@ -63,11 +54,7 @@ export const products: Product[] = [
     description:
       'Heavy 240gsm cotton with a large back print inspired by neon nights. Drop shoulders and extended length for that true oversized silhouette.',
     price: 48,
-    images: [
-      pexels(5384423),
-      pexels(5709663),
-      pexels(8532616),
-    ],
+    images: [img(3), img(1), img(7)],
     colours: ['Black', 'Navy'],
     sizes: ['M', 'L', 'XL', 'XXL'],
     stock: 64,
@@ -85,11 +72,7 @@ export const products: Product[] = [
     description:
       'Enzyme-washed for a lived-in feel from day one. Soft faded colour and subtle texture. A modern take on the classic vintage tee.',
     price: 42,
-    images: [
-      pexels(6311575),
-      pexels(7671185),
-      pexels(3755706),
-    ],
+    images: [img(4), img(8), img(6)],
     colours: ['Stone', 'Sage', 'Washed Black'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 48,
@@ -107,11 +90,7 @@ export const products: Product[] = [
     description:
       'Extended length with a single chest pocket. Clean lines, premium cotton, and a slightly structured fit that works under jackets or alone.',
     price: 44,
-    images: [
-      pexels(7671166),
-      pexels(1183266),
-      pexels(6311387),
-    ],
+    images: [img(5), img(1), img(4)],
     colours: ['Black', 'Olive', 'Cream'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 56,
@@ -130,11 +109,7 @@ export const products: Product[] = [
       'Horizontal stripe pattern on mid-weight cotton. Breathable, versatile, and built for everyday rotation.',
     price: 40,
     salePrice: 32,
-    images: [
-      pexels(1043474),
-      pexels(1926769),
-      pexels(298863),
-    ],
+    images: [img(6), img(2), img(8)],
     colours: ['Navy/White', 'Black/White'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     stock: 72,
@@ -152,11 +127,7 @@ export const products: Product[] = [
     description:
       'Our bold logo printed on ultra-heavy 280gsm cotton. Structured shoulders and a boxy cut that holds its shape wash after wash.',
     price: 52,
-    images: [
-      pexels(8532616),
-      pexels(955859),
-      pexels(4066293),
-    ],
+    images: [img(7), img(1), img(3)],
     colours: ['Black', 'White', 'Forest'],
     sizes: ['M', 'L', 'XL', 'XXL'],
     stock: 39,
@@ -174,11 +145,7 @@ export const products: Product[] = [
     description:
       'Soft garment-dyed cotton in a warm sand tone. Relaxed through the body with a slightly curved hem. Effortless summer staple.',
     price: 39,
-    images: [
-      pexels(7671185),
-      pexels(6311392),
-      pexels(996329),
-    ],
+    images: [img(8), img(4), img(2)],
     colours: ['Sand', 'Clay', 'Dust'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 67,
@@ -188,8 +155,6 @@ export const products: Product[] = [
     bestseller: false,
     newArrival: true,
   },
-
-  // ==================== HOODIES ====================
   {
     id: 'hd-001',
     name: 'Premium Black Hoodie',
@@ -198,11 +163,7 @@ export const products: Product[] = [
     description:
       'Our flagship heavyweight hoodie. 400gsm French terry, brushed interior, double-layered hood, and metal aglets. Built for cold days and late nights.',
     price: 98,
-    images: [
-      pexels(1183266),
-      pexels(6311387),
-      pexels(7671166),
-    ],
+    images: [img(9), img(13), img(12)],
     colours: ['Black', 'Charcoal'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     stock: 94,
@@ -221,11 +182,7 @@ export const products: Product[] = [
       'True oversized fit with dropped shoulders and an extended body. Soft brushed fleece, kangaroo pocket, and clean minimal branding.',
     price: 88,
     salePrice: 72,
-    images: [
-      pexels(7671185),
-      pexels(6311575),
-      pexels(3755706),
-    ],
+    images: [img(10), img(16), img(9)],
     colours: ['Heather Grey', 'Black', 'Navy'],
     sizes: ['M', 'L', 'XL', 'XXL'],
     stock: 78,
@@ -243,11 +200,7 @@ export const products: Product[] = [
     description:
       'Full-zip design with technical stretch fabric. Water-resistant finish, hidden zip pockets, and a modern athletic silhouette.',
     price: 110,
-    images: [
-      pexels(1040945),
-      pexels(1598507),
-      pexels(1183266),
-    ],
+    images: [img(11), img(9), img(15)],
     colours: ['Black', 'Olive', 'Slate'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 45,
@@ -265,11 +218,7 @@ export const products: Product[] = [
     description:
       'Garment-dyed and washed for a soft, lived-in look. Slightly cropped body and wide sleeves. The kind of hoodie that feels like an old favourite from day one.',
     price: 92,
-    images: [
-      pexels(6311387),
-      pexels(7671166),
-      pexels(1183266),
-    ],
+    images: [img(12), img(9), img(14)],
     colours: ['Faded Black', 'Washed Navy', 'Stone'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 53,
@@ -287,11 +236,7 @@ export const products: Product[] = [
     description:
       'Bold embroidered logo on our densest French terry. Structured hood, ribbed cuffs and hem, and a fit that stays true after countless washes.',
     price: 105,
-    images: [
-      pexels(3755706),
-      pexels(1183266),
-      pexels(6311575),
-    ],
+    images: [img(13), img(9), img(10)],
     colours: ['Black', 'White', 'Forest Green'],
     sizes: ['M', 'L', 'XL', 'XXL'],
     stock: 61,
@@ -310,11 +255,7 @@ export const products: Product[] = [
       'Modern cropped length with a wide, boxy cut. Perfect for layering or wearing alone with high-waisted bottoms. Soft brushed interior.',
     price: 86,
     salePrice: 69,
-    images: [
-      pexels(1926769),
-      pexels(7671185),
-      pexels(6311392),
-    ],
+    images: [img(14), img(16), img(10)],
     colours: ['Black', 'Cream', 'Sage'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 42,
@@ -332,11 +273,7 @@ export const products: Product[] = [
     description:
       'Ultimate cold-weather piece. Thick outer shell with full sherpa lining, oversized hood, and reinforced stitching throughout.',
     price: 128,
-    images: [
-      pexels(1598507),
-      pexels(1040945),
-      pexels(1183266),
-    ],
+    images: [img(15), img(11), img(9)],
     colours: ['Black', 'Brown', 'Olive'],
     sizes: ['M', 'L', 'XL', 'XXL'],
     stock: 29,
@@ -354,11 +291,7 @@ export const products: Product[] = [
     description:
       'Breathable mid-weight French terry designed for milder days. Clean lines, minimal branding, and a versatile everyday fit.',
     price: 78,
-    images: [
-      pexels(6311575),
-      pexels(7671185),
-      pexels(996329),
-    ],
+    images: [img(16), img(10), img(14)],
     colours: ['Heather Grey', 'White', 'Sky'],
     sizes: ['S', 'M', 'L', 'XL'],
     stock: 81,
@@ -368,8 +301,6 @@ export const products: Product[] = [
     bestseller: false,
     newArrival: false,
   },
-
-  // ==================== 3D PRINT ====================
   {
     id: '3d-001',
     name: 'Geometric Desk Sculpture',
@@ -378,11 +309,7 @@ export const products: Product[] = [
     description:
       'Precision FDM print in premium filament. Angular form designed as a desk statement piece. Smooth layer lines, solid fill base for stability.',
     price: 42,
-    images: [
-      pexels(2582937),
-      pexels(3861969),
-      pexels(442150),
-    ],
+    images: [img(17), img(20), img(24)],
     colours: ['Matte Black', 'Silk Gold', 'Neon Cyan'],
     sizes: ['Standard', 'Large'],
     stock: 35,
@@ -419,11 +346,7 @@ export const products: Product[] = [
       'Snap-together cable management hub. Organise desk power and USB lines with clean modular slots.',
     price: 28,
     salePrice: 22,
-    images: [
-      pexels(442150),
-      pexels(2113994),
-      pexels(2582937),
-    ],
+    images: [img(18), img(21), img(24)],
     colours: ['Matte Black', 'White', 'Orange'],
     sizes: ['Standard'],
     stock: 3,
@@ -458,11 +381,7 @@ export const products: Product[] = [
     description:
       'Minimal hex planter for succulents. Drainage channel, dual-wall strength, silk finish options.',
     price: 24,
-    images: [
-      pexels(1005058),
-      pexels(1084199),
-      pexels(1407305),
-    ],
+    images: [img(19), img(17), img(24)],
     colours: ['Sand', 'White', 'Charcoal'],
     sizes: ['One Size'],
     stock: 48,
@@ -498,11 +417,7 @@ export const products: Product[] = [
     description:
       'Low-poly display mask for wall mounting. Faceted geometry, statement piece for creative spaces.',
     price: 68,
-    images: [
-      pexels(3861969),
-      pexels(2582937),
-      pexels(1037992),
-    ],
+    images: [img(20), img(17), img(24)],
     colours: ['Gunmetal', 'White', 'Neon Edge'],
     sizes: ['Display'],
     stock: 12,
@@ -537,11 +452,7 @@ export const products: Product[] = [
     description:
       'Orbit-inspired phone stand. Stable base, cable pass-through, works with most phones in landscape or portrait.',
     price: 32,
-    images: [
-      pexels(788946),
-      pexels(2113994),
-      pexels(442150),
-    ],
+    images: [img(21), img(18), img(22)],
     colours: ['Matte Black', 'Ice White', 'Cyan'],
     sizes: ['Universal'],
     stock: 64,
@@ -577,11 +488,7 @@ export const products: Product[] = [
       'Set of artisan-style novelty keycaps. Precision fit for MX-style switches. Mix finishes for a custom board.',
     price: 36,
     salePrice: 29,
-    images: [
-      pexels(2115257),
-      pexels(163100),
-      pexels(1714208),
-    ],
+    images: [img(22), img(21), img(24)],
     colours: ['Black', 'Neon Cyan', 'Magenta'],
     sizes: ['MX Set'],
     stock: 8,
@@ -610,7 +517,6 @@ export const products: Product[] = [
   },
 ];
 
-/** Helper lookups */
 export const getProductBySlug = (slug: string): Product | undefined =>
   products.find((p) => p.slug === slug);
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Modular Cable Hub">
+  <rect width="600" height="800" fill="#f4f4f5"/>
+  <rect x="150" y="220" width="300" height="200" rx="16" fill="#111827" stroke="#f97316" stroke-width="3"/>
+  <rect x="180" y="260" width="40" height="40" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
+  <rect x="240" y="260" width="40" height="40" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
+  <rect x="300" y="260" width="40" height="40" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
+  <rect x="360" y="260" width="40" height="40" rx="6" fill="none" stroke="#f97316" stroke-width="2"/>
+  <rect x="0" y="640" width="600" height="160" fill="#0a0a0a"/>
+  <text x="40" y="690" fill="#a1a1aa" font-family="system-ui,sans-serif" font-size="18" font-weight="600" letter-spacing="4">3D LAB</text>
+  <text x="40" y="735" fill="#fafafa" font-family="system-ui,sans-serif" font-size="28" font-weight="700">Modular Cable Hub</text>
+  <text x="40" y="770" fill="#71717a" font-family="system-ui,sans-serif" font-size="16" letter-spacing="3">NOIR</text>
+</svg>
