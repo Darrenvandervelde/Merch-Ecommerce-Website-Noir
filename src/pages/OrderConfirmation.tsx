@@ -1,16 +1,58 @@
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { formatPrice } from '../utils/format';
+import { verifyPaystackPayment } from '../api/payments';
 
 export function OrderConfirmation() {
   const { orderId } = useParams();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const state = location.state as {
     total?: number;
     email?: string;
+    paymentStatus?: string;
   } | null;
 
+  const reference = searchParams.get('reference') || searchParams.get('trxref');
+  const [verifyMsg, setVerifyMsg] = useState<string | null>(null);
+  const [paid, setPaid] = useState(state?.paymentStatus === 'paid');
+  const [verifiedTotal, setVerifiedTotal] = useState<number | undefined>(
+    state?.total
+  );
+
+  useEffect(() => {
+    if (!reference) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        setVerifyMsg('Confirming payment…');
+        const result = await verifyPaystackPayment(reference);
+        if (cancelled) return;
+        setPaid(result.paid);
+        setVerifyMsg(
+          result.paid
+            ? 'Payment confirmed via Paystack.'
+            : 'Payment not completed yet. If you were charged, contact support with your reference.'
+        );
+        if (result.order?.total != null) setVerifiedTotal(result.order.total);
+      } catch (err) {
+        if (!cancelled) {
+          setVerifyMsg(
+            err instanceof Error
+              ? err.message
+              : 'Could not verify payment automatically.'
+          );
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [reference]);
+
   const loyaltyCode = 'NOIR10';
+  const total = verifiedTotal ?? state?.total;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
@@ -33,16 +75,22 @@ export function OrderConfirmation() {
         </div>
 
         <h1 className="text-3xl font-bold tracking-tight text-brand-950">
-          Thank you for your order
+          {paid ? 'Thank you for your order' : 'Order received'}
         </h1>
         <p className="mt-3 text-brand-500">
           Order number:{' '}
-          <strong className="text-brand-900">{orderId}</strong>
+          <strong className="text-brand-900 font-mono">{orderId}</strong>
         </p>
 
-        {state?.total != null && (
+        {total != null && (
           <p className="mt-2 text-lg font-medium">
-            Total paid: {formatPrice(state.total)}
+            {paid ? 'Total paid' : 'Order total'}: {formatPrice(total)}
+          </p>
+        )}
+
+        {verifyMsg && (
+          <p className="mt-4 text-sm text-brand-600" role="status">
+            {verifyMsg}
           </p>
         )}
 
@@ -51,9 +99,17 @@ export function OrderConfirmation() {
           {state?.email ? ` to ${state.email}` : ''}. Estimated delivery: 3–7
           business days.
         </p>
+
+        <p className="mt-4">
+          <Link
+            to={`/track/${orderId}`}
+            className="text-sm font-medium text-brand-900 underline underline-offset-2"
+          >
+            Track this order →
+          </Link>
+        </p>
       </div>
 
-      {/* Care tips */}
       <div className="mt-12 rounded-lg border border-brand-200 bg-brand-50 p-6 text-left">
         <h2 className="text-sm font-semibold text-brand-950 uppercase tracking-wider">
           Care for your pieces
@@ -66,33 +122,14 @@ export function OrderConfirmation() {
         </ul>
       </div>
 
-      {/* Loyalty / next order */}
       <div className="mt-6 rounded-lg border border-brand-900 bg-brand-950 text-white p-6 text-left">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-brand-300">
           Your next order
         </h2>
         <p className="mt-2 text-sm text-brand-200">
-          Use code <strong className="text-white tracking-wide">{loyaltyCode}</strong> for
-          10% off your next purchase. Valid for 60 days.
+          Use code <strong className="text-white tracking-wide">{loyaltyCode}</strong>{' '}
+          for 10% off your next purchase. Valid for 60 days.
         </p>
-        <p className="mt-3 text-xs text-brand-400">
-          Early access to drops is coming soon for returning customers.
-        </p>
-      </div>
-
-      {/* Review CTA */}
-      <div className="mt-6 rounded-lg border border-brand-200 p-6 text-left">
-        <h2 className="text-sm font-semibold text-brand-950">Share your fit</h2>
-        <p className="mt-2 text-sm text-brand-600">
-          Once your order arrives, leave a quick review — it helps other people
-          choose the right size and supports the brand.
-        </p>
-        <Link
-          to="/shop"
-          className="mt-3 inline-block text-sm font-medium text-brand-900 underline underline-offset-2"
-        >
-          Browse again after it ships →
-        </Link>
       </div>
 
       <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
