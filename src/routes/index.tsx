@@ -1,34 +1,69 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { ProtectedRoute } from '../components/common/ProtectedRoute';
+import { lazyWithRetry } from '../utils/lazyRetry';
 
-const Home = lazy(() => import('../pages/Home').then((m) => ({ default: m.Home })));
-const Shop = lazy(() => import('../pages/Shop').then((m) => ({ default: m.Shop })));
-const ProductDetails = lazy(() => import('../pages/ProductDetails').then((m) => ({ default: m.ProductDetails })));
-const Cart = lazy(() => import('../pages/Cart').then((m) => ({ default: m.Cart })));
-const Checkout = lazy(() => import('../pages/Checkout').then((m) => ({ default: m.Checkout })));
-const OrderConfirmation = lazy(() => import('../pages/OrderConfirmation').then((m) => ({ default: m.OrderConfirmation })));
-const OrderTracking = lazy(() => import('../pages/OrderTracking').then((m) => ({ default: m.OrderTracking })));
-const About = lazy(() => import('../pages/About').then((m) => ({ default: m.About })));
-const Contact = lazy(() => import('../pages/Contact').then((m) => ({ default: m.Contact })));
-const FAQ = lazy(() => import('../pages/FAQ').then((m) => ({ default: m.FAQ })));
-const Wishlist = lazy(() => import('../pages/Wishlist').then((m) => ({ default: m.Wishlist })));
-const Account = lazy(() => import('../pages/Account').then((m) => ({ default: m.Account })));
-const Login = lazy(() => import('../pages/Login').then((m) => ({ default: m.Login })));
-const Register = lazy(() => import('../pages/Register').then((m) => ({ default: m.Register })));
-const ShippingReturns = lazy(() => import('../pages/ShippingReturns').then((m) => ({ default: m.ShippingReturns })));
-const Privacy = lazy(() => import('../pages/Privacy').then((m) => ({ default: m.Privacy })));
-const Terms = lazy(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
-const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
-const Compare = lazy(() => import('../pages/Compare').then((m) => ({ default: m.Compare })));
+const Home = lazyWithRetry(() => import('../pages/Home').then((m) => ({ default: m.Home })));
+const Shop = lazyWithRetry(() => import('../pages/Shop').then((m) => ({ default: m.Shop })));
+const ProductDetails = lazyWithRetry(() =>
+  import('../pages/ProductDetails').then((m) => ({ default: m.ProductDetails }))
+);
+const Cart = lazyWithRetry(() => import('../pages/Cart').then((m) => ({ default: m.Cart })));
+const Checkout = lazyWithRetry(() =>
+  import('../pages/Checkout').then((m) => ({ default: m.Checkout }))
+);
+const OrderConfirmation = lazyWithRetry(() =>
+  import('../pages/OrderConfirmation').then((m) => ({ default: m.OrderConfirmation }))
+);
+const OrderTracking = lazyWithRetry(() =>
+  import('../pages/OrderTracking').then((m) => ({ default: m.OrderTracking }))
+);
+const About = lazyWithRetry(() => import('../pages/About').then((m) => ({ default: m.About })));
+const Contact = lazyWithRetry(() =>
+  import('../pages/Contact').then((m) => ({ default: m.Contact }))
+);
+const FAQ = lazyWithRetry(() => import('../pages/FAQ').then((m) => ({ default: m.FAQ })));
+const Wishlist = lazyWithRetry(() =>
+  import('../pages/Wishlist').then((m) => ({ default: m.Wishlist }))
+);
+const Account = lazyWithRetry(() =>
+  import('../pages/Account').then((m) => ({ default: m.Account }))
+);
+const Login = lazyWithRetry(() => import('../pages/Login').then((m) => ({ default: m.Login })));
+const Register = lazyWithRetry(() =>
+  import('../pages/Register').then((m) => ({ default: m.Register }))
+);
+const ShippingReturns = lazyWithRetry(() =>
+  import('../pages/ShippingReturns').then((m) => ({ default: m.ShippingReturns }))
+);
+const Privacy = lazyWithRetry(() =>
+  import('../pages/Privacy').then((m) => ({ default: m.Privacy }))
+);
+const Terms = lazyWithRetry(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
+const NotFound = lazyWithRetry(() =>
+  import('../pages/NotFound').then((m) => ({ default: m.NotFound }))
+);
+const Compare = lazyWithRetry(() =>
+  import('../pages/Compare').then((m) => ({ default: m.Compare }))
+);
 
-const AdminDashboard = lazy(() => import('../pages/admin/Dashboard').then((m) => ({ default: m.AdminDashboard })));
-const AdminProducts = lazy(() => import('../pages/admin/Products').then((m) => ({ default: m.AdminProducts })));
-const AdminOrders = lazy(() => import('../pages/admin/Orders').then((m) => ({ default: m.AdminOrders })));
-const AdminPayments = lazy(() => import('../pages/admin/Payments').then((m) => ({ default: m.AdminPayments })));
-const AdminStockSync = lazy(() => import('../pages/admin/StockSync').then((m) => ({ default: m.AdminStockSync })));
+const AdminDashboard = lazyWithRetry(() =>
+  import('../pages/admin/Dashboard').then((m) => ({ default: m.AdminDashboard }))
+);
+const AdminProducts = lazyWithRetry(() =>
+  import('../pages/admin/Products').then((m) => ({ default: m.AdminProducts }))
+);
+const AdminOrders = lazyWithRetry(() =>
+  import('../pages/admin/Orders').then((m) => ({ default: m.AdminOrders }))
+);
+const AdminPayments = lazyWithRetry(() =>
+  import('../pages/admin/Payments').then((m) => ({ default: m.AdminPayments }))
+);
+const AdminStockSync = lazyWithRetry(() =>
+  import('../pages/admin/StockSync').then((m) => ({ default: m.AdminStockSync }))
+);
 
 function PageLoader() {
   return (
@@ -43,9 +78,7 @@ function withSuspense(element: React.ReactNode) {
 }
 
 function withAdmin(element: React.ReactNode) {
-  return withSuspense(
-    <ProtectedRoute adminOnly>{element}</ProtectedRoute>
-  );
+  return withSuspense(<ProtectedRoute adminOnly>{element}</ProtectedRoute>);
 }
 
 export const router = createBrowserRouter([
