@@ -186,6 +186,6 @@ Never handle or store raw card numbers in this application.
 - [ ] Images have alt text
 - [ ] Mobile navigation works
 
-## Licenese
+## License
 
 (MIT LICENSE) = [License Click Here](https://github.com/Darrenvandervelde/Merch-Ecommerce-Website-Noir/blob/main/LICENSE)
