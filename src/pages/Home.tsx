@@ -36,7 +36,7 @@ export function Home() {
                 everyday grind.
               </h1>
               <p className="text-lg text-brand-300 max-w-md leading-relaxed">
-                Heavyweight apparel and precision 3D printed objects — one brand,
+                Heavyweight apparel and precision 3D printed objects - one brand,
                 two workshops. Same cart. Same checkout.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -114,7 +114,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* ========== 3D LAB — dedicated attached section ========== */}
+      {/* ========== 3D LAB - dedicated attached section ========== */}
       <section className="relative overflow-hidden bg-[#05070a] text-white">
         {/* Grid / glow background */}
         <div
@@ -140,7 +140,7 @@ export function Home() {
                 <span className="text-emerald-400">Designed to last.</span>
               </h2>
               <p className="mt-4 text-brand-400 leading-relaxed">
-                Functional and collectible pieces from our print workshop —
+                Functional and collectible pieces from our print workshop -
                 geometric planters, desk tools, and cyber-inspired display art.
                 Add them to the same cart as your hoodie.
               </p>

@@ -98,7 +98,7 @@ export function Compare() {
                 <td key={items[idx].productId} className="p-3 border-b">
                   {p
                     ? `★ ${p.rating.toFixed(1)} (${p.reviewCount})`
-                    : '—'}
+                    : '-'}
                 </td>
               ))}
             </tr>
@@ -110,7 +110,7 @@ export function Compare() {
                     ? p.stock > 0
                       ? `${p.stock} in stock`
                       : 'Out of stock'
-                    : '—'}
+                    : '-'}
                 </td>
               ))}
             </tr>
@@ -118,7 +118,7 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Material</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs?.material ?? '—'}
+                  {i.printSpecs?.material ?? '-'}
                 </td>
               ))}
             </tr>
@@ -126,7 +126,7 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Layer height</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs?.layerHeight ?? '—'}
+                  {i.printSpecs?.layerHeight ?? '-'}
                 </td>
               ))}
             </tr>
@@ -134,7 +134,7 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Infill</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs?.infill ?? '—'}
+                  {i.printSpecs?.infill ?? '-'}
                 </td>
               ))}
             </tr>
@@ -142,7 +142,7 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Dimensions</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs?.dimensions ?? '—'}
+                  {i.printSpecs?.dimensions ?? '-'}
                 </td>
               ))}
             </tr>
@@ -150,7 +150,7 @@ export function Compare() {
               <td className="p-3 border-b text-brand-500">Print time</td>
               {items.map((i) => (
                 <td key={i.productId} className="p-3 border-b">
-                  {i.printSpecs ? `${i.printSpecs.printTimeHours}h` : '—'}
+                  {i.printSpecs ? `${i.printSpecs.printTimeHours}h` : '-'}
                 </td>
               ))}
             </tr>

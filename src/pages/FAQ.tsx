@@ -8,11 +8,11 @@ const faqs = [
     items: [
       {
         q: 'How long does shipping take?',
-        a: 'Standard shipping is 3–7 business days. Express is 1–2 business days within the continental US.',
+        a: 'Standard shipping is 3-7 business days. Express is 1-2 business days within the continental US.',
       },
       {
         q: 'Do you offer free shipping?',
-        a: 'Yes — free standard shipping on all orders over $100.',
+        a: 'Yes - free standard shipping on all orders over $100.',
       },
     ],
   },

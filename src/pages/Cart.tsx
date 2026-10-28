@@ -36,7 +36,7 @@ export function Cart() {
       <EmptyState
         icon={ShoppingBag}
         title="Your cart is empty"
-        description="Looks like you haven’t added anything yet. Explore streetwear essentials and 3D Lab prints — free shipping over $100."
+        description="Looks like you haven’t added anything yet. Explore streetwear essentials and 3D Lab prints - free shipping over $100."
         actionLabel="Shop the collection"
         actionTo="/shop"
       >
