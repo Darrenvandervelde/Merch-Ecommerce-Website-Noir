@@ -1,4 +1,4 @@
--- NOIR v2 — optional Supabase schema for production orders
+-- NOIR v2 - optional Supabase schema for production orders
 -- Run in the Supabase SQL editor when you are ready to leave file-based db.json
 
 create table if not exists public.orders (

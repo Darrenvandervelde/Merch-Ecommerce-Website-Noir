@@ -200,7 +200,7 @@ export function AdminDashboard() {
               <ul className="space-y-1 text-sm text-brand-600">
                 {waitlistEntries.slice(0, 5).map((e) => (
                   <li key={e.id}>
-                    {e.productName} — {e.colour}/{e.size} ({e.email})
+                    {e.productName} - {e.colour}/{e.size} ({e.email})
                   </li>
                 ))}
               </ul>

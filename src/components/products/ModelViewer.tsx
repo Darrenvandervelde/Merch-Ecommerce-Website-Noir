@@ -178,7 +178,7 @@ export function ModelViewer({ product, filamentHex = '#1a1a1a' }: ModelViewerPro
 
   return (
     <div className="relative">
-      {/* Loading skeleton overlay — sits above the mount until three is ready */}
+      {/* Loading skeleton overlay - sits above the mount until three is ready */}
       {status === 'loading' && (
         <div
           className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg border border-emerald-500/20 bg-brand-950"

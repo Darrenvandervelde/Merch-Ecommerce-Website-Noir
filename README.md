@@ -92,7 +92,7 @@ Matching is **case-insensitive** (e.g. `ord-8k2m9x` works).
 
 Unknown numbers show a clear “not found” message and the same demo chips for quick retries.
 
-> **Note:** This is demo data only. In production, resolve order numbers via your backend / carrier API — never rely on client-only status for real fulfilment.
+> **Note:** This is demo data only. In production, resolve order numbers via your backend / carrier API - never rely on client-only status for real fulfilment.
 
 ## Project Structure
 
@@ -122,7 +122,7 @@ src/
 - Cart and wishlist survive page refreshes
 - Quantity cannot exceed available stock
 - Free shipping threshold: $100 (demo logic)
-- Payment section is structured for Stripe – no card data is stored client-side
+- Payment section is structured for Stripe - no card data is stored client-side
 - Order tracking looks up demo orders by number on `/track`
 
 ## Deployment
@@ -160,7 +160,7 @@ Recommended backend endpoints:
 - `POST /auth/login`, `/auth/register`
 - `GET /account/orders`
 
-Never trust client-side prices or stock – always re-validate on the server.
+Never trust client-side prices or stock - always re-validate on the server.
 
 ## Payment Integration
 
