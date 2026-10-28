@@ -27,7 +27,7 @@ export function AdminStockSync() {
         remote.forEach((p) => updateProductStock(p.id, p.stock));
         addToast(`Stock synced from API (${remote.length} products)`, 'success');
       } else {
-        addToast('API offline — showing local stock only', 'info');
+        addToast('API offline - showing local stock only', 'info');
       }
     } catch (err) {
       addToast(

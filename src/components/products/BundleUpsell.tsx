@@ -35,7 +35,7 @@ export function BundleUpsell({ current, catalog }: BundleUpsellProps) {
     const r1 = addItem(current, colourA, sizeA, 1);
     const r2 = addItem(partner, colourB, sizeB, 1);
     if (r1.success && r2.success) {
-      addToast(`Bundle added — save ${formatPrice(save)}`, 'success');
+      addToast(`Bundle added - save ${formatPrice(save)}`, 'success');
     } else {
       addToast(r1.message || r2.message, 'error');
     }

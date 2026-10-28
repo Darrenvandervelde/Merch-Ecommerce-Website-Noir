@@ -46,7 +46,7 @@ export function Register() {
       setAuth(res.token, res.user);
       addToast(
         res.user.role === 'admin'
-          ? 'Account created — you are the admin'
+          ? 'Account created - you are the admin'
           : 'Account created',
         'success'
       );

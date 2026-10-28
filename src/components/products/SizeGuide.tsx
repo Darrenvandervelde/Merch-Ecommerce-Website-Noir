@@ -84,7 +84,7 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
                 id="size-guide-title"
                 className="text-lg font-semibold text-brand-950"
               >
-                Size guide —{' '}
+                Size guide -{' '}
                 {category === 'tshirt'
                   ? 'T-Shirts'
                   : category === 'hoodie'
@@ -143,7 +143,7 @@ export function SizeGuidePanel({ category, productId }: SizeGuideProps) {
                       <td className="py-2.5 pr-4 text-brand-600">{row.chest}</td>
                       <td className="py-2.5 pr-4 text-brand-600">{row.length}</td>
                       <td className="py-2.5 text-brand-600">
-                        {row.sleeve ?? '—'}
+                        {row.sleeve ?? '-'}
                       </td>
                     </tr>
                   ))}
