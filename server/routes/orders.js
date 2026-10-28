@@ -35,7 +35,7 @@ const createOrderSchema = z.object({
   simulatePaid: z.boolean().optional(),
 });
 
-/** POST /api/orders – create order (re-validates prices & stock on server) */
+/** POST /api/orders - create order (re-validates prices & stock on server) */
 router.post('/', optionalAuth, async (req, res) => {
   try {
     const body = createOrderSchema.parse(req.body);
@@ -122,7 +122,7 @@ router.post('/', optionalAuth, async (req, res) => {
 });
 
 /**
- * GET /api/orders/track/:orderNumber — public tracking (limited fields)
+ * GET /api/orders/track/:orderNumber - public tracking (limited fields)
  * Must be registered before /:id routes that require auth.
  */
 router.get('/track/:orderNumber', (req, res) => {
@@ -148,7 +148,7 @@ router.get('/track/:orderNumber', (req, res) => {
   });
 });
 
-/** GET /api/orders – admin: all orders; user: own orders */
+/** GET /api/orders - admin: all orders; user: own orders */
 router.get('/', requireAuth, (req, res) => {
   const db = getDb();
   if (req.user.role === 'admin') {
@@ -179,7 +179,7 @@ router.get('/:id', requireAuth, (req, res) => {
   res.json(order);
 });
 
-/** PATCH /api/orders/:id/status – admin */
+/** PATCH /api/orders/:id/status - admin */
 router.patch('/:id/status', requireAdmin, async (req, res) => {
   const { status, paymentStatus } = req.body;
   const db = getDb();
