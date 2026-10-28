@@ -1,4 +1,4 @@
-# Deprecated — replaced by ci.yml
+# Deprecated - replaced by ci.yml
 # Kept as a no-op so old workflow links do not confuse contributors.
 # Delete this file after confirming ci.yml is the only active workflow.
 

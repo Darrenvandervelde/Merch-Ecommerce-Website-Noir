@@ -1,4 +1,4 @@
-# Database research — NOIR store (Issue #5)
+# Database research - NOIR store (Issue #5)
 
 ## Requirement
 
@@ -28,7 +28,7 @@ Store **product data + images**, with **role-based access**:
 | **MongoDB Atlas** | Fine for documents; image files still need S3/R2; RLS is weaker than Postgres policies |
 | **Neon** | Excellent Postgres; you still need a separate file store |
 | **Firebase** | Fast to start; vendor lock-in; less ideal for relational stock/orders |
-| **AWS S3 alone** | Files only — still need a DB |
+| **AWS S3 alone** | Files only - still need a DB |
 | **Self-hosted** | Full control, highest ops cost |
 
 ### Target architecture

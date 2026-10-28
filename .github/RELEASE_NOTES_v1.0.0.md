@@ -1,4 +1,4 @@
-# NOIR Store v1.0.0 — First release
+# NOIR Store v1.0.0 - First release
 
 **Date:** 2026-09-24  
 **Tag:** `v1.0.0`  

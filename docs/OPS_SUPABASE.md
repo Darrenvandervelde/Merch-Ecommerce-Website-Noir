@@ -1,6 +1,6 @@
 # Supabase orders (Issue #86)
 
-## Code status — done on `main`
+## Code status - done on `main`
 
 | Piece | Location |
 |-------|----------|

@@ -7,7 +7,7 @@ Code for initialize + verify is already on `main` (`server/lib/paystack.js`, che
 1. Create a [Paystack](https://paystack.com/) account (South Africa).  
 2. **Test mode** first:
    - Public key → `VITE_PAYSTACK_PUBLIC_KEY` (frontend / Vercel)  
-   - Secret key → `PAYSTACK_SECRET_KEY` (API host only — never commit)  
+   - Secret key → `PAYSTACK_SECRET_KEY` (API host only - never commit)  
 3. Set:
    - `VITE_CURRENCY=ZAR`  
    - `VITE_APP_URL=https://your-live-domain`  
