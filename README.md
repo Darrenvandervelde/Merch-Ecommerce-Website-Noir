@@ -173,18 +173,18 @@ Never handle or store raw card numbers in this application.
 
 ## Production Checklist
 
-- [ ] `npm install` succeeds
-- [ ] `npm run build` succeeds
-- [ ] All routes work (including refresh)
-- [ ] Cart persists after refresh
-- [ ] Variant selection required for add-to-cart
-- [ ] Forms validate correctly
-- [ ] Order tracking works with demo numbers above
-- [ ] Environment variables documented
-- [ ] Secrets not committed
-- [ ] SPA fallback configured for hosting
-- [ ] Images have alt text
-- [ ] Mobile navigation works
+- [✔️] `npm install` succeeds
+- [✔️] `npm run build` succeeds
+- [✔️] All routes work (including refresh)
+- [✔️] Cart persists after refresh
+- [✔️] Variant selection required for add-to-cart
+- [✔️] Forms validate correctly
+- [✔️] Order tracking works with demo numbers above
+- [✔️] Environment variables documented
+- [✔️] Secrets not committed
+- [✔️] SPA fallback configured for hosting
+- [✔️] Images have alt text
+- [✔️] Mobile navigation works
 
 ## License
 
