@@ -18,7 +18,7 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
   const handleUploadDemo = (e: React.FormEvent) => {
     e.preventDefault();
     addToast(
-      'Photo review submitted for moderation (demo — not saved to server).',
+      'Photo review submitted for moderation (demo - not saved to server).',
       'success'
     );
     setTitle('');
@@ -30,7 +30,7 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
     <section className="mt-12 border-t border-brand-200 pt-10">
       <h2 className="text-xl font-bold text-brand-950">Customer photos & reviews</h2>
       <p className="mt-1 text-sm text-brand-500">
-        See how this piece looks in real life — verified buyers only below
+        See how this piece looks in real life - verified buyers only below
       </p>
 
       {reviews.length > 0 ? (
@@ -74,7 +74,7 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
         </div>
       ) : (
         <p className="mt-4 text-sm text-brand-500">
-          No photo reviews yet — be the first to share how it looks on you.
+          No photo reviews yet - be the first to share how it looks on you.
         </p>
       )}
 
@@ -124,7 +124,7 @@ export function PhotoReviewGallery({ productId }: PhotoReviewGalleryProps) {
           Submit review
         </Button>
         <p className="text-[11px] text-brand-400">
-          Demo only — submissions are not stored on a server yet.
+          Demo only - submissions are not stored on a server yet.
         </p>
       </form>
 

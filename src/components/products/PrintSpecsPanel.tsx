@@ -16,7 +16,7 @@ export function PrintSpecsPanel({ specs }: PrintSpecsPanelProps) {
       : []),
     {
       label: 'Eco filament',
-      value: specs.eco ? 'Yes — plant-based PLA option' : 'Standard engineering filament',
+      value: specs.eco ? 'Yes - plant-based PLA option' : 'Standard engineering filament',
     },
   ];
 

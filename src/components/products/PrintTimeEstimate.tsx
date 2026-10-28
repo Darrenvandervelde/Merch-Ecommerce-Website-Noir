@@ -26,7 +26,7 @@ export function PrintTimeEstimate({
   stock,
   unitPrice,
 }: PrintTimeEstimateProps) {
-  const shipDays = stock > 10 ? '2–4' : stock > 0 ? '3–5' : '7–10';
+  const shipDays = stock > 10 ? '2-4' : stock > 0 ? '3-5' : '7-10';
   const printHours = specs?.printTimeHours;
   const weight = specs?.weightGrams;
   const materialCost =
@@ -49,8 +49,8 @@ export function PrintTimeEstimate({
             <span className="text-brand-600">
               ~{printHours}h machine time
               {stock < 5
-                ? ' — low stock may add 1–2 days for a fresh print run'
-                : ' — usually fulfilled from finished stock'}
+                ? ' - low stock may add 1-2 days for a fresh print run'
+                : ' - usually fulfilled from finished stock'}
             </span>
           </p>
 
@@ -82,7 +82,7 @@ export function PrintTimeEstimate({
           {unitPrice != null && materialCost != null && (
             <p className="text-xs text-brand-400">
               List price {formatPrice(unitPrice)} includes labour, finishing &
-              QC — not filament alone.
+              QC - not filament alone.
             </p>
           )}
         </>
