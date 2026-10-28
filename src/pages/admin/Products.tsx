@@ -276,7 +276,7 @@ export function AdminProducts() {
                         type="number"
                         min="0"
                         step="0.01"
-                        placeholder="—"
+                        placeholder="-"
                         value={editSale}
                         onChange={(e) => setEditSale(e.target.value)}
                         className="w-24 h-9 px-2 border border-brand-300 rounded text-sm"
@@ -286,7 +286,7 @@ export function AdminProducts() {
                         {formatPrice(p.salePrice)}
                       </span>
                     ) : (
-                      <span className="text-brand-400">—</span>
+                      <span className="text-brand-400">-</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
