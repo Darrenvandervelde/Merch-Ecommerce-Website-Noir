@@ -9,7 +9,7 @@ export function useRegisterSW() {
       navigator.serviceWorker
         .register('/sw.js')
         .catch(() => {
-          /* silent — SW optional for demo */
+          /* silent - SW optional for demo */
         });
     };
     if (document.readyState === 'complete') register();

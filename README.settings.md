@@ -18,7 +18,7 @@
 
 ## Why both INI and JSON?
 
-- **INI** — easy for non-code edits and deployment notes
-- **JSON** — first-class in the Vite/React bundle with types
+- **INI** - easy for non-code edits and deployment notes
+- **JSON** - first-class in the Vite/React bundle with types
 
 Keep them in sync when you change a value.

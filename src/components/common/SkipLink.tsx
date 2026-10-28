@@ -1,4 +1,4 @@
-/** Skip to main content — first focusable control for keyboard users */
+/** Skip to main content - first focusable control for keyboard users */
 export function SkipLink() {
   return (
     <a

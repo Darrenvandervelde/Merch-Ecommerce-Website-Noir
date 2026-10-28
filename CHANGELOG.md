@@ -2,7 +2,7 @@
 
 All notable changes to the NOIR merch store are documented in this file.
 
-## [1.0.0] — 2026-09-24
+## [1.0.0] - 2026-09-24
 
 ### First release
 

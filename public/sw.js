@@ -1,4 +1,4 @@
-/* NOIR service worker — shell only; never cache hashed /assets/*.js chunks */
+/* NOIR service worker - shell only; never cache hashed /assets/*.js chunks */
 const CACHE = 'noir-shell-v2';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg'];
 
@@ -37,7 +37,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Always network for hashed Vite chunks — stale cache causes "Failed to fetch dynamically imported module"
+  // Always network for hashed Vite chunks - stale cache causes "Failed to fetch dynamically imported module"
   if (isAssetRequest(url)) {
     event.respondWith(
       fetch(request).catch(() => caches.match(request))

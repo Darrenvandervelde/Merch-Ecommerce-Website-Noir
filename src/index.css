@@ -30,7 +30,7 @@ body {
   margin: 0;
 }
 
-/* Dark mode — class on <html> from themeStore */
+/* Dark mode - class on <html> from themeStore */
 html.dark body {
   @apply bg-brand-950 text-brand-100;
 }

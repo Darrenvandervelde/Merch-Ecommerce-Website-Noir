@@ -53,7 +53,7 @@ export async function checkApiHealth(): Promise<{
         message:
           err instanceof Error
             ? err.message
-            : 'API offline — using local catalogue',
+            : 'API offline - using local catalogue',
       };
     }
   }
