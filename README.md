@@ -1,8 +1,5 @@
 # NOIR: Premium Streetwear E-Commerce
-
->[!WARNING]
-> Hello World
->
+<!-- Hello World -->
 Production-ready merchandise store for hoodies and T-shirts built with React, Vite, TypeScript, Tailwind CSS, Zustand, React Hook Form + Zod, and React Router.
 
 ## Features
